@@ -1,0 +1,2020 @@
+<title>Menú Hunters&amp;Fishers</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   Hunters&Fishers · Menú digital con pedido y pago desde la mesa
+   Prototipo ViBE · Dirección "Cabaña de noche" (tema oscuro único)
+   ========================================================================== */
+:root{
+  color-scheme:dark;
+  /* Paleta */
+  --carbon:#1C1915;      /* fondo */
+  --superficie:#26221C;  /* tarjetas, sheets */
+  --veta:#3A332A;        /* bordes, divisores */
+  --hueso:#F2E8D5;       /* texto */
+  --tenue:#B5A990;       /* texto secundario */
+  --naranja:#E8692C;     /* acento: precios, botón principal, contador */
+  --on-naranja:#1C1915;  /* texto sobre naranja */
+  --pino:#2F4A3A;        /* tierra / Hunters / éxito */
+  --mar:#1F6E8C;         /* superficie Fishers */
+  --mar-texto:#5FB3CF;   /* texto y acentos de mariscos */
+  --madera:#8B5E3C;      /* solo ornamento */
+  /* Tipografía */
+  --display:"Alfa Slab One","Rockwell","Roboto Slab","Rockwell Extra Bold",Georgia,"Times New Roman",serif;
+  --label:"Barlow Condensed","Arial Narrow","Roboto Condensed","Helvetica Neue",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  /* Movimiento */
+  --rebote:cubic-bezier(.34,1.56,.64,1);
+  --salida:cubic-bezier(.22,1,.36,1);
+  /* Gutter */
+  --gl:max(16px,env(safe-area-inset-left,0px));
+  --gr:max(16px,env(safe-area-inset-right,0px));
+  /* Vetas de madera (muy bajo contraste) */
+  --grano:
+    repeating-linear-gradient(92deg,rgba(242,232,213,.018) 0 1px,transparent 1px 13px),
+    repeating-linear-gradient(88deg,rgba(0,0,0,.12) 0 2px,transparent 2px 29px),
+    repeating-linear-gradient(90.6deg,rgba(139,94,60,.04) 0 7px,transparent 7px 41px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden}
+body{
+  background-color:var(--carbon);
+  background-image:radial-gradient(700px 520px at 62% 50%,rgba(232,105,44,.07),transparent 70%),var(--grano);
+  color:var(--hueso);font-family:var(--body);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;
+}
+p,h1,h2,h3,ul,ol{margin:0}
+ul,ol{padding:0;list-style:none}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:disabled{cursor:not-allowed}
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--naranja);outline-offset:2px}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.g{padding-left:var(--gl);padding-right:var(--gr)}
+.amp{color:var(--naranja)}
+.nowrap{white-space:nowrap}
+.money{font-family:var(--label);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ic{width:20px;height:20px;flex:none;display:block}
+.nt{text-transform:none}
+
+/* ---------- Escenario: móvil a pantalla completa, escritorio con marco ---------- */
+.stage{height:100vh;height:100dvh}
+.pitch{display:none}
+.phone{position:relative;width:100%;height:100%;overflow:hidden;overflow:clip;background-color:var(--carbon);background-image:var(--grano)}
+.app{position:absolute;inset:0;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);container-type:inline-size}
+.scroller{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;position:relative;-webkit-overflow-scrolling:touch}
+
+@media (min-width:900px){
+  .stage{display:flex;align-items:center;justify-content:center;gap:72px;padding:24px}
+  .pitch{display:block;max-width:340px;flex:0 1 340px}
+  .phone{flex:none;width:400px;height:min(820px,calc(100dvh - 48px));border:10px solid #0E0C0A;border-radius:46px;
+    box-shadow:0 0 0 1px var(--veta),0 40px 90px rgba(0,0,0,.6),0 0 0 14px rgba(58,51,42,.25)}
+  .ribbon{display:none!important}
+}
+
+/* ---------- Texto lateral (solo escritorio) ---------- */
+.pitch-kicker{font-family:var(--label);font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--tenue);font-size:.9rem}
+.pitch-title{font-family:var(--display);font-size:2.35rem;line-height:1.06;margin:.5rem 0 1.6rem;text-wrap:balance}
+.pitch-steps{display:grid;gap:16px}
+.pitch-steps li{display:grid;grid-template-columns:38px 1fr;gap:14px;align-items:start;color:var(--tenue);font-size:1.02rem;line-height:1.5}
+.pitch-steps b{color:var(--hueso);font-weight:600}
+.pitch-n{width:38px;height:38px;border-radius:50%;border:2px solid var(--naranja);display:grid;place-items:center;font-family:var(--label);font-weight:700;color:var(--naranja);font-size:1.05rem}
+.pitch-note{margin-top:26px;padding-top:16px;border-top:1px solid var(--veta);display:flex;gap:10px;align-items:center;font-family:var(--label);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:.9rem;color:var(--tenue)}
+.pitch-note .ic{color:var(--naranja)}
+.pitch-detail{margin-top:8px;font-size:.95rem;line-height:1.5;color:var(--tenue)}
+
+/* ---------- Franja de prototipo (móvil) ---------- */
+.ribbon{flex:none;display:flex;align-items:center;gap:6px;min-height:44px;background:var(--superficie);border-bottom:1px solid var(--veta);padding-right:0!important}
+.ribbon p{flex:1;min-width:0;font-family:var(--label);font-weight:600;letter-spacing:.03em;text-transform:uppercase;font-size:.76rem;color:var(--tenue);line-height:1.25;padding:4px 0}
+.ribbon p b{color:var(--hueso);font-weight:700}
+.ribbon[hidden]{display:none}
+.icon-btn{width:44px;height:44px;flex:none;display:grid;place-items:center;background:none;border:0;border-radius:12px;color:var(--hueso)}
+.icon-btn .ic{width:20px;height:20px}
+
+/* ---------- Encabezado (una fila) ---------- */
+.top{flex:none;display:grid;gap:6px;padding-top:6px;padding-bottom:6px;border-bottom:1px solid var(--veta);background:linear-gradient(rgba(28,25,21,.6),rgba(28,25,21,.95))}
+.top-row{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
+.brand-wrap{display:grid;gap:4px;justify-items:start;min-width:0}
+.brand{font-family:var(--display);font-weight:400;font-size:1.2rem;font-size:clamp(1.05rem,5cqi,1.42rem);line-height:1;letter-spacing:.005em;white-space:nowrap;min-width:0}
+.top-actions{display:flex;align-items:center;gap:6px;flex:none}
+.lang{display:flex;flex:none;border:1px solid var(--veta);border-radius:999px;padding:2px;background:var(--carbon)}
+.lang button{min-width:44px;min-height:44px;border:0;background:none;border-radius:999px;font-family:var(--label);font-weight:700;letter-spacing:.1em;font-size:.95rem;color:var(--tenue);transition:background-color .2s,color .2s}
+.lang button[aria-pressed="true"]{background:var(--hueso);color:var(--carbon)}
+.table-chip{display:inline-flex;align-items:center;gap:5px;min-height:22px;font-family:var(--label);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.74rem;line-height:1;border:1px solid var(--veta);border-radius:6px;padding:0 7px;background:var(--superficie);color:var(--hueso);white-space:nowrap}
+.table-chip i{width:6px;height:6px;border-radius:50%;background:var(--naranja);display:block}
+.call{position:relative;width:48px;height:48px;flex:none;display:grid;place-items:center;background:var(--superficie);border:1px solid var(--veta);border-radius:50%;transition:border-color .2s,transform .15s}
+.call:active{transform:scale(.95)}
+.call:hover{border-color:#5A4F40}
+.call .ic{color:var(--naranja);width:22px;height:22px}
+.call-dot{position:absolute;top:3px;right:3px;width:12px;height:12px;border-radius:50%;background:#5FA37A;box-shadow:0 0 0 2px var(--carbon)}
+.waiter-strip{display:flex;align-items:center;gap:8px;background:var(--pino);border-radius:10px;padding-left:12px;font-size:.92rem;line-height:1.3;animation:dropIn .35s var(--rebote)}
+.waiter-strip .ic{width:18px;height:18px}
+.waiter-strip > span{flex:1;display:flex;align-items:center;gap:8px;padding:6px 0}
+.waiter-strip.in-sheet{margin-top:16px}
+.link-btn{min-height:44px;padding:0 12px;background:none;border:0;color:var(--hueso);font-family:var(--label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.85rem;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+@keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+/* ---------- Vista menú ---------- */
+.hello{padding-top:12px}
+.kicker{font-family:var(--label);font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--tenue);font-size:.82rem}
+.hello h2{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.12;margin-top:2px;text-wrap:balance}
+
+/* Letrero Hunters / Fishers */
+.sign-wrap{position:relative;margin-top:10px;padding:10px 12px;border-radius:18px;border:1px solid var(--veta);
+  background-color:var(--superficie);background-image:repeating-linear-gradient(91deg,rgba(242,232,213,.025) 0 1px,transparent 1px 9px),repeating-linear-gradient(89deg,rgba(0,0,0,.14) 0 2px,transparent 2px 23px);
+  box-shadow:inset 0 1px 0 rgba(242,232,213,.05),0 6px 16px rgba(0,0,0,.25)}
+.sign-wrap::before,.sign-wrap::after{content:"";position:absolute;top:7px;width:6px;height:6px;border-radius:50%;background:var(--madera);box-shadow:inset 0 -1px 0 rgba(0,0,0,.4)}
+.sign-wrap::before{left:8px}.sign-wrap::after{right:8px}
+.sign{position:relative;display:grid;grid-template-columns:1fr 1fr;background:var(--carbon);border:1px solid var(--veta);border-radius:999px;padding:5px;box-shadow:inset 0 2px 8px rgba(0,0,0,.45);touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.sign button{position:relative;z-index:1;min-height:50px;border:0;background:none;border-radius:999px;color:var(--tenue);font-family:var(--label);font-weight:700;font-size:1.2rem;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:8px;transition:color .25s}
+.sign button .emo{width:32px;height:32px;flex:none;display:grid;place-items:center;border-radius:50%;background:var(--carbon);box-shadow:inset 0 0 0 1px rgba(242,232,213,.12);font-size:1.1rem;line-height:1;letter-spacing:0}
+.sign button[aria-pressed="true"]{color:var(--on-naranja)}
+.sign[data-side="fishers"] button[aria-pressed="true"]{color:var(--hueso)}
+.knob{position:absolute;top:5px;bottom:5px;left:5px;width:calc(50% - 5px);border-radius:999px;background:var(--naranja);
+  transition:transform .45s var(--rebote),background-color .3s;box-shadow:0 2px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.2)}
+.sign[data-side="fishers"] .knob{transform:translateX(100%);background:var(--mar)}
+.sign-desc{margin-top:8px;text-align:center;font-size:.93rem;color:var(--tenue);min-height:1.5em}
+
+/* Chips de categoría */
+.chips{position:sticky;top:0;z-index:6;display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none;
+  margin-top:8px;padding-top:8px;padding-bottom:8px;background:var(--carbon);border-bottom:1px solid transparent;transition:border-color .2s}
+.chips::-webkit-scrollbar{display:none}
+.chips::after{content:"";flex:0 0 1px}
+.chips.stuck{border-bottom-color:var(--veta);box-shadow:0 8px 16px -10px rgba(0,0,0,.7)}
+.chip{flex:none;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--veta);background:var(--superficie);color:var(--hueso);
+  font-family:var(--label);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:.93rem;white-space:nowrap;transition:background-color .2s,border-color .2s}
+.chip[aria-current="true"]{background:var(--pino);border-color:#4B6B58}
+.side-fishers .chip[aria-current="true"]{background:var(--mar);border-color:#2C86A8}
+
+/* Secciones */
+.sections.in-h .sec{animation:inL .34s var(--salida) both}
+.sections.in-f .sec{animation:inR .34s var(--salida) both}
+@keyframes inL{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:none}}
+@keyframes inR{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.sec{padding-top:18px}
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.sec-head::after{content:"";flex:1;min-width:16px;height:2px;align-self:center;margin-top:14px;background:repeating-linear-gradient(90deg,var(--veta) 0 7px,transparent 7px 11px)}
+.sec-ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--pino);color:var(--hueso);box-shadow:inset 0 0 0 1px rgba(242,232,213,.08)}
+.sec-ico .ic{width:28px;height:28px}
+.sec-fishers .sec-ico{background:var(--mar)}
+.sec-both .sec-ico{background:var(--veta);box-shadow:inset 0 0 0 1px var(--madera)}
+.sec-head h2{font-family:var(--display);font-weight:400;font-size:1.32rem;line-height:1.1}
+.sec-fishers .kicker{color:var(--mar-texto)}
+
+.dish-list{display:grid;gap:10px}
+.dish{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 104px;gap:14px;width:100%;text-align:left;background-color:var(--superficie);background-image:var(--grano);border:1px solid var(--veta);border-radius:14px;padding:15px 14px 14px;
+  box-shadow:inset 0 0 0 4px var(--superficie),inset 0 0 0 5px rgba(139,94,60,.5),0 4px 12px rgba(0,0,0,.22);transition:transform .2s var(--rebote),border-color .2s}
+/* Placa de trofeo: dos tornillos de madera */
+.dish::before,.dish::after{content:"";position:absolute;top:8px;width:5px;height:5px;border-radius:50%;background:var(--madera);box-shadow:inset 0 -1px 0 rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.25)}
+.dish::before{left:8px}.dish::after{right:8px}
+.dish:hover{border-color:#51473A}
+.dish:active{transform:scale(.985)}
+.dish .photo{order:2;width:104px;height:104px;align-self:start}
+.dish-body{display:flex;flex-direction:column;gap:4px;min-width:0}
+.dish-name{font-family:var(--display);font-size:1.08rem;line-height:1.16;overflow-wrap:anywhere}
+.dish-desc{font-size:.9rem;line-height:1.38;color:var(--tenue);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dish-foot{margin-top:auto;padding-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.price{font-family:var(--label);font-weight:700;font-size:1.18rem;color:var(--naranja);font-variant-numeric:tabular-nums;white-space:nowrap}
+.star{color:var(--naranja);margin-left:1px}
+.plus{margin-left:auto;width:34px;height:34px;border-radius:50%;background:transparent;border:1.5px solid rgba(242,232,213,.6);color:var(--hueso);display:grid;place-items:center;flex:none;transition:transform .25s var(--rebote),border-color .2s}
+.plus .ic{width:18px;height:18px;stroke-width:2.6}
+.dish:hover .plus{transform:scale(1.08);border-color:var(--hueso)}
+.dish.feature{grid-template-columns:1fr}
+.dish.feature .photo{order:0;width:100%;height:auto;aspect-ratio:16/6.5}
+/* En la destacada, el precio va justo bajo el nombre para que se vea sin hacer scroll */
+.dish.feature .dish-foot{order:1;margin-top:0;padding-top:2px}
+.dish.feature .dish-desc{order:2}
+.dish.feature .dish-name{font-size:1.3rem}
+.tag{align-self:flex-start;font-family:var(--label);font-weight:700;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;padding:1px 8px;border-radius:4px;border:1px solid var(--madera);background:rgba(139,94,60,.22);color:var(--hueso)}
+.tag-fishers{color:var(--mar-texto);border-color:currentColor;background:rgba(31,110,140,.16)}
+.serves{font-family:var(--label);font-weight:600;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tenue);border:1px solid var(--veta);border-radius:4px;padding:1px 7px}
+.footnote{margin-top:22px;font-size:.85rem;color:var(--tenue)}
+.footnote b{color:var(--naranja)}
+
+/* Foto ilustrada de ejemplo */
+.photo{position:relative;display:grid;place-items:center;overflow:hidden;border-radius:10px;color:rgba(242,232,213,.86);
+  background-image:
+    repeating-linear-gradient(100deg,transparent 0 7px,rgba(0,0,0,.11) 7px 8px,transparent 8px 15px,rgba(255,240,220,.05) 15px 16px),
+    radial-gradient(120% 90% at var(--lx,28%) var(--ly,18%),rgba(232,105,44,.5),rgba(232,105,44,0) 62%),
+    linear-gradient(150deg,#6E4529,#3C291B 55%,#241A12)}
+.photo.ph-fishers{background-image:
+    repeating-linear-gradient(100deg,transparent 0 7px,rgba(0,0,0,.12) 7px 8px,transparent 8px 15px,rgba(255,240,220,.05) 15px 16px),
+    radial-gradient(90% 80% at var(--lx,78%) var(--ly,14%),rgba(232,105,44,.32),rgba(232,105,44,0) 60%),
+    linear-gradient(150deg,#1F6E8C,#17495C 52%,#132A33)}
+.photo.ph-both{background-image:
+    repeating-linear-gradient(100deg,transparent 0 7px,rgba(0,0,0,.12) 7px 8px,transparent 8px 15px,rgba(255,240,220,.05) 15px 16px),
+    radial-gradient(100% 90% at var(--lx,50%) var(--ly,10%),rgba(255,186,84,.42),rgba(255,186,84,0) 62%),
+    linear-gradient(150deg,#8A5A1F,#57391A 55%,#2A1D10)}
+.photo::before{content:"";position:absolute;width:74%;aspect-ratio:1;border-radius:50%;border:2px solid rgba(242,232,213,.14);background:radial-gradient(circle,rgba(0,0,0,.18),rgba(0,0,0,.05) 70%)}
+.photo .ic{position:relative;width:46%;height:auto;aspect-ratio:1;filter:drop-shadow(0 2px 0 rgba(0,0,0,.3));transform:rotate(var(--rot,0deg))}
+.dish.feature .photo::before,.ph-hero::before{width:auto;height:76%}
+.dish.feature .photo .ic,.ph-hero .ic{width:auto;height:42%}
+.ph-tag{position:absolute;left:5px;bottom:5px;white-space:nowrap;font-family:var(--label);font-weight:600;font-size:.64rem;letter-spacing:.04em;text-transform:uppercase;background:rgba(28,25,21,.8);color:var(--hueso);padding:2px 6px;border-radius:4px;line-height:1.3}
+.ph-hero{border-radius:0;aspect-ratio:16/9;width:100%}
+.ph-hero .ph-tag,.dish.feature .ph-tag{left:var(--gl);bottom:10px;font-size:.74rem;letter-spacing:.08em}
+.dish.feature .ph-tag{left:10px}
+.dish:not(.feature) .ph-tag{left:0;right:0;bottom:0;border-radius:0;text-align:center;white-space:normal;padding:3px 4px;font-size:.7rem;letter-spacing:.06em;background:rgba(28,25,21,.78)}
+.dish .photo .ic{margin-top:-12px}
+.dish.feature .photo .ic,.ph-hero .ic{margin-top:0}
+
+/* Tarjeta de estado en el menú */
+.mstatus{margin-top:14px;background:var(--superficie);border:1px solid var(--veta);border-radius:14px;padding:12px 14px;display:grid;gap:10px}
+
+/* ---------- Barra inferior (canoa / total) ---------- */
+.bar{position:absolute;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:center;gap:12px;
+  padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));
+  background-color:var(--carbon);background-image:var(--grano);border-top:1px solid var(--veta);box-shadow:0 -10px 24px rgba(0,0,0,.35);
+  animation:barIn .3s var(--salida)}
+.bar[hidden]{display:none}
+@keyframes barIn{from{transform:translateY(100%)}to{transform:none}}
+.bar-canoe{position:relative;width:64px;height:32px;flex:none;transform-origin:50% 70%}
+.bar-canoe svg{width:100%;height:100%;display:block;overflow:visible}
+.bar-canoe.bob{animation:bob .6s ease-out}
+@keyframes bob{0%{transform:translateY(0) rotate(0)}25%{transform:translateY(5px) rotate(-3deg)}55%{transform:translateY(-2px) rotate(2deg)}100%{transform:translateY(0) rotate(0)}}
+.badge{position:absolute;top:-10px;right:-4px;min-width:24px;height:24px;border-radius:12px;background:var(--naranja);color:var(--on-naranja);font-family:var(--label);font-weight:700;font-size:.9rem;display:flex;align-items:center;justify-content:center;padding:0 6px;font-variant-numeric:tabular-nums;box-shadow:0 0 0 2px var(--carbon)}
+.badge.zero{background:var(--veta);color:var(--hueso)}
+.bar-canoe.bob .badge{animation:pop .45s var(--rebote)}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.3)}100%{transform:scale(1)}}
+.bar-info{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.bar-label{font-family:var(--label);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:.82rem;color:var(--tenue);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-amt{font-family:var(--label);font-weight:700;font-size:1.3rem;color:var(--naranja);font-variant-numeric:tabular-nums}
+.bar-empty{font-size:.9rem;color:var(--hueso)}
+.bar .btn{flex:none}
+.bar-space{height:calc(var(--bar-h,0px) + 28px)}
+.dot{position:absolute;z-index:80;width:16px;height:16px;border-radius:50%;background:var(--naranja);box-shadow:0 0 0 3px rgba(232,105,44,.25);pointer-events:none}
+
+/* ---------- Botones ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 18px;border-radius:12px;border:0;
+  font-family:var(--label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:1.02rem;line-height:1.1;text-align:center;
+  transition:transform .15s var(--rebote),background-color .2s,opacity .2s}
+.btn:active:not(:disabled){transform:scale(.97)}
+.btn-primary{background:var(--naranja);color:var(--on-naranja)}
+.btn-primary:hover:not(:disabled){background:#EE7740}
+.btn-primary:disabled{background:var(--veta);color:var(--tenue)}
+.btn-ghost{background:transparent;color:var(--hueso);border:1.5px solid var(--veta)}
+.btn-ghost:hover:not(:disabled){border-color:#5A4F40}
+.btn-ghost[aria-disabled="true"]{cursor:default}
+.btn-block{width:100%}
+.btn .ic{width:20px;height:20px}
+
+.stepper{display:inline-flex;align-items:center;border:1.5px solid var(--veta);border-radius:999px;background:var(--carbon);flex:none}
+.stepper button{width:44px;height:44px;border:0;background:none;border-radius:50%;display:grid;place-items:center;color:var(--hueso)}
+.stepper button:disabled{opacity:.35}
+.stepper output{min-width:2.4ch;text-align:center;font-family:var(--label);font-weight:700;font-size:1.15rem;font-variant-numeric:tabular-nums}
+
+/* ---------- Sheets (diálogos) ---------- */
+.layer{position:absolute;inset:0;z-index:50}
+.layer[hidden]{display:none}
+.layer:not(.open){pointer-events:none}
+.backdrop{position:absolute;inset:0;background:rgba(8,6,4,.64);opacity:0;transition:opacity .28s ease-out}
+.layer.open .backdrop{opacity:1}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:calc(100% - 24px);display:flex;flex-direction:column;overflow:hidden;
+  background-color:var(--superficie);background-image:var(--grano);border-top:1px solid var(--veta);border-radius:20px 20px 0 0;
+  box-shadow:0 -24px 60px rgba(0,0,0,.5);transform:translateY(104%);transition:transform .28s var(--salida)}
+.layer.open .sheet{transform:none}
+.sheet.tall{height:calc(100% - 24px)}
+.sheet-detail{max-height:calc(100% - 64px)}
+.sheet-detail .ph-hero{aspect-ratio:16/8}
+.sheet-x{position:absolute;top:10px;right:max(10px,env(safe-area-inset-right,0px));z-index:3;width:44px;height:44px;border-radius:50%;border:1px solid var(--veta);background:rgba(28,25,21,.88);color:var(--hueso);display:grid;place-items:center}
+.sheet-head{flex:none;padding-top:18px;padding-bottom:12px;border-bottom:1px solid var(--veta);padding-right:64px!important}
+.sheet-title{font-family:var(--display);font-weight:400;font-size:1.45rem;line-height:1.12;display:flex;align-items:center;gap:10px}
+.sheet-title .ic{width:30px;height:30px;color:var(--madera)}
+.sheet-sub{margin-top:4px;color:var(--tenue);font-size:.92rem}
+.sheet-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;position:relative}
+.sheet-pad{padding-top:16px;padding-bottom:20px;display:grid;gap:6px}
+.sheet-foot{flex:none;display:grid;gap:8px;padding-top:12px;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--veta);background:var(--superficie)}
+
+/* Detalle */
+.detail-desc{color:var(--tenue);font-size:.98rem}
+.detail-price{font-family:var(--label);font-weight:700;font-size:1.35rem;color:var(--naranja);font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sample-note{font-family:var(--label);font-weight:600;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tenue)}
+.opt{border:0;margin:14px 0 0;padding:0;min-width:0}
+.opt legend{display:flex;align-items:center;gap:8px;width:100%;padding:0;font-family:var(--label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:1.02rem}
+.req{font-size:.72rem;letter-spacing:.12em;border:1px solid var(--veta);color:var(--tenue);border-radius:4px;padding:0 6px}
+.opt-hint{font-size:.85rem;color:var(--tenue);margin-top:2px}
+.opt-list{display:grid;gap:8px;margin-top:10px}
+.radio{position:relative;display:flex;align-items:center;gap:12px;min-height:50px;padding:0 14px;border:1px solid var(--veta);border-radius:12px;background:var(--carbon);cursor:pointer;transition:border-color .2s,background-color .2s}
+.radio input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.radio-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--tenue);flex:none;display:grid;place-items:center}
+.radio-dot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--naranja);transform:scale(0);transition:transform .3s var(--rebote)}
+.radio input:checked + .radio-dot{border-color:var(--naranja)}
+.radio input:checked + .radio-dot::after{transform:scale(1)}
+.radio:has(input:checked){border-color:var(--naranja);background:rgba(232,105,44,.08)}
+.radio:has(input:focus-visible){outline:3px solid var(--naranja);outline-offset:2px}
+.opt.has-err .radio{border-color:rgba(232,105,44,.6)}
+.opt-err,.field-err{display:flex;align-items:center;gap:6px;color:var(--hueso);font-size:.9rem;font-weight:600;margin-top:6px}
+.opt-err .ic,.field-err .ic{color:var(--naranja);width:18px;height:18px}
+.opt-err:empty{display:none}
+.field-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.field-label{display:block;font-family:var(--label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:1.02rem}
+.note-label{margin-top:14px}
+textarea,.money-input input{width:100%;background:var(--carbon);color:var(--hueso);border:1px solid var(--veta);border-radius:12px;padding:12px 14px;font:inherit;font-size:16px;resize:none;margin-top:6px}
+textarea::placeholder{color:#9C907A}
+textarea:focus-visible,.money-input input:focus-visible{outline:3px solid var(--naranja);outline-offset:1px;border-color:transparent}
+
+/* Mesero */
+.reasons{display:grid;gap:10px;padding-top:16px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.reason{display:flex;align-items:center;gap:14px;min-height:60px;width:100%;text-align:left;padding:10px 14px;border-radius:14px;border:1px solid var(--veta);background:var(--carbon);font-weight:600;font-size:1.02rem;transition:border-color .2s,transform .15s}
+.reason:active{transform:scale(.98)}
+.reason:hover{border-color:var(--naranja)}
+.reason-ico{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:var(--superficie);color:var(--naranja);flex:none}
+.reason-ico .ic{width:24px;height:24px}
+
+/* Canoa (carrito) */
+.lines{display:grid}
+.line{padding-top:14px;padding-bottom:14px;border-bottom:1px solid var(--veta);display:grid;gap:6px}
+.line-top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.line-name{font-family:var(--display);font-size:1.02rem;line-height:1.2}
+.line-total{font-size:1.08rem}
+.line-meta{font-size:.9rem;color:var(--tenue)}
+.line-meta b{color:var(--hueso);font-weight:600}
+.line-note{font-size:.9rem;color:var(--hueso);background:var(--carbon);border-left:3px solid var(--madera);padding:4px 10px;border-radius:0 6px 6px 0;font-style:italic;overflow-wrap:anywhere}
+.line-ctrl{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px}
+.line-del{color:var(--tenue)}
+.line-del:hover{color:var(--naranja)}
+.empty{display:grid;justify-items:center;gap:12px;text-align:center;padding-top:32px;padding-bottom:32px;color:var(--tenue)}
+.empty .ic{width:64px;height:64px;color:var(--madera)}
+.sum-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:4px 0}
+.sum-row > span:first-child{color:var(--tenue)}
+.sum-row .money{font-size:1.1rem}
+.sum-row.sep{border-top:1px solid var(--veta);margin-top:8px;padding-top:10px}
+.sum-row.total{border-top:1px solid var(--veta);margin-top:6px;padding-top:12px}
+.sum-row.total > span:first-child{font-family:var(--display);color:var(--hueso);font-size:1.2rem}
+.sum-row.total .money{font-size:1.55rem;font-weight:700;color:var(--naranja)}
+
+/* ---------- Vistas secundarias ---------- */
+.view-pad{padding-top:10px}
+.back{min-height:44px;display:inline-flex;align-items:center;gap:4px;background:none;border:0;padding:0 10px 0 0;color:var(--tenue);font-family:var(--label);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:.92rem}
+.back:hover{color:var(--hueso)}
+.view-title{font-family:var(--display);font-weight:400;font-size:1.75rem;line-height:1.1;margin-top:4px;text-wrap:balance}
+.lead{color:var(--tenue);margin-top:6px}
+.card{background:var(--superficie);border:1px solid var(--veta);border-radius:16px;padding:14px 16px;margin-top:14px}
+.mini-label{font-family:var(--label);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.82rem;color:var(--tenue)}
+.fine{font-size:.86rem;color:var(--tenue);margin-top:6px}
+.demo-note{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:14px;font-family:var(--label);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:.8rem;color:var(--tenue)}
+.demo-note .ic{width:16px;height:16px}
+.actions{display:grid;gap:10px;margin-top:18px}
+
+/* Ronda + sedal */
+.round{display:grid;gap:10px}
+.card.round{padding:14px 16px}
+.round-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.round-head h3{font-family:var(--display);font-weight:400;font-size:1.12rem}
+.round-time{display:block;font-size:.85rem;color:var(--tenue)}
+.round-state{flex:none;white-space:nowrap;font-family:var(--label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;padding:3px 9px;border-radius:999px;background:var(--veta);color:var(--hueso)}
+.round-state[data-step="2"]{background:var(--pino)}
+.sedal{position:relative;height:8px;background:var(--veta);border-radius:4px}
+.sedal i{position:absolute;left:0;top:0;bottom:0;display:block;border-radius:4px;background:linear-gradient(90deg,var(--pino),var(--naranja));transition:width .9s var(--salida)}
+.sedal i::after{content:"";position:absolute;right:-6px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:var(--naranja);border:2px solid var(--hueso);box-shadow:0 0 0 3px rgba(232,105,44,.25)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-family:var(--label);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:.8rem;color:var(--tenue)}
+.steps li:nth-child(2){text-align:center}.steps li:nth-child(3){text-align:right}
+.steps li.on{color:var(--hueso)}
+.steps li.now{color:var(--hueso);font-weight:700}
+.steps li.now::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--naranja);margin-right:5px;vertical-align:1px}
+.round-lines{display:grid;gap:4px;border-top:1px dashed var(--veta);padding-top:10px;font-size:.93rem}
+.round-lines li{display:flex;gap:8px}
+.round-lines .q{font-family:var(--label);font-weight:700;color:var(--tenue);min-width:2.2ch;font-variant-numeric:tabular-nums}
+.round-lines small{display:block;color:var(--tenue);font-size:.85rem}
+.rounds{display:grid;gap:12px;margin-top:14px}
+.rounds .card{margin-top:0}
+
+/* Cuenta */
+.bill-round + .bill-round{margin-top:12px;padding-top:12px;border-top:1px dashed var(--veta)}
+.bl{display:grid;grid-template-columns:auto 1fr auto;gap:8px;padding:5px 0;align-items:baseline}
+.bl-q{font-family:var(--label);font-weight:700;color:var(--tenue);font-variant-numeric:tabular-nums;min-width:2.4ch}
+.bl-n small{display:block;color:var(--tenue);font-size:.85rem}
+.block{margin-top:22px}
+.block-title{font-family:var(--display);font-weight:400;font-size:1.22rem;margin-bottom:10px}
+.seg-chips{display:grid;grid-template-columns:auto repeat(4,minmax(44px,1fr));gap:6px}
+.seg-chips .pill{min-width:44px;padding:0 8px;font-size:.92rem;letter-spacing:.04em}
+.pill{min-height:44px;min-width:56px;padding:0 14px;border-radius:999px;border:1px solid var(--veta);background:var(--superficie);font-family:var(--label);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.98rem;transition:background-color .2s,border-color .2s,color .2s}
+.pill[aria-pressed="true"]{background:var(--hueso);color:var(--carbon);border-color:var(--hueso)}
+.custom-tip{margin-top:12px}
+.custom-tip[hidden]{display:none}
+.money-input{position:relative}
+.money-input span{position:absolute;left:14px;top:50%;transform:translateY(-50%);margin-top:3px;font-family:var(--label);font-weight:700;color:var(--tenue)}
+.money-input input{padding-left:30px;font-family:var(--label);font-weight:600;font-size:1.15rem;font-variant-numeric:tabular-nums}
+.money-input input[aria-invalid="true"]{border-color:var(--naranja)}
+.field-err:empty{display:none}
+.usd{margin-top:4px;text-align:right;font-size:.88rem;color:var(--tenue)}
+.usd b{font-family:var(--label);font-weight:700;color:var(--hueso);font-size:1rem;font-variant-numeric:tabular-nums}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--carbon);border:1px solid var(--veta)}
+.seg button{min-height:46px;border:0;border-radius:10px;background:none;color:var(--tenue);font-family:var(--label);font-weight:700;letter-spacing:.03em;text-transform:uppercase;font-size:.84rem;line-height:1.1;padding:4px 6px;transition:background-color .2s,color .2s}
+.seg button[aria-pressed="true"]{background:var(--superficie);color:var(--hueso);box-shadow:inset 0 0 0 1px var(--naranja)}
+.split-body{margin-top:14px}
+.split-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.each{margin-top:12px;text-align:center;background:var(--superficie);border:1px solid var(--veta);border-radius:14px;padding:14px}
+.each-amt{font-family:var(--label);font-weight:700;font-size:2rem;color:var(--naranja);font-variant-numeric:tabular-nums;line-height:1.1;margin-top:2px}
+.assign{display:grid;gap:8px;margin-top:12px}
+.as-line{background:var(--superficie);border:1px solid var(--veta);border-radius:12px;padding:10px 12px}
+.as-line.unassigned{border-color:rgba(232,105,44,.55)}
+.as-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:.95rem}
+.as-top small{display:block;color:var(--tenue);font-size:.84rem}
+.as-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.pchip{width:44px;height:44px;border-radius:50%;border:1px solid var(--veta);background:var(--carbon);font-family:var(--label);font-weight:700;font-size:.95rem;font-variant-numeric:tabular-nums;transition:background-color .2s,transform .25s var(--rebote)}
+.pchip[aria-pressed="true"]{background:var(--hueso);color:var(--carbon);border-color:var(--hueso);transform:scale(1.04)}
+.warn{display:flex;gap:8px;align-items:flex-start;margin-top:12px;padding:10px 12px;border-radius:12px;border:1px solid var(--veta);border-left:3px solid var(--naranja);color:var(--hueso);font-size:.93rem;background:var(--superficie)}
+.unsent{margin-top:14px}
+.unsent > div{display:grid;gap:10px;justify-items:start}
+.unsent .btn{min-height:44px}
+.warn .ic{color:var(--naranja);margin-top:1px}
+.ok-note{display:flex;gap:8px;align-items:center;margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--pino);font-size:.93rem}
+.persons{display:grid;gap:8px;margin-top:12px}
+.person{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:baseline;background:var(--superficie);border:1px solid var(--veta);border-radius:12px;padding:10px 14px}
+.person-name{font-family:var(--display);font-size:1rem}
+.person-total{font-size:1.25rem;font-weight:700;color:var(--naranja);grid-row:span 2;align-self:center}
+.person-break{font-size:.84rem;color:var(--tenue)}
+
+/* Pago */
+.amount-big{font-family:var(--label);font-weight:700;font-size:2.3rem;color:var(--naranja);font-variant-numeric:tabular-nums;line-height:1.05;margin-top:2px}
+.amount .usd{text-align:left}
+.methods{display:grid;gap:10px;margin-top:16px}
+.method{display:flex;align-items:center;gap:14px;width:100%;min-height:72px;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid var(--veta);background:var(--superficie);transition:border-color .2s,background-color .2s,transform .15s}
+.method:active{transform:scale(.985)}
+.method[aria-pressed="true"]{border-color:var(--naranja);background:rgba(232,105,44,.07)}
+.method-ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--carbon);color:var(--hueso);flex:none}
+.method-ico .ic{width:24px;height:24px}
+.method-txt{flex:1;display:grid;gap:2px;min-width:0}
+.method-name{font-family:var(--label);font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:1.05rem;line-height:1.15}
+.method-desc{font-size:.88rem;color:var(--tenue);line-height:1.35}
+.method-radio{width:22px;height:22px;border-radius:50%;border:2px solid var(--tenue);flex:none;display:grid;place-items:center}
+.method-radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--naranja);transform:scale(0);transition:transform .3s var(--rebote)}
+.method[aria-pressed="true"] .method-radio{border-color:var(--naranja)}
+.method[aria-pressed="true"] .method-radio::after{transform:scale(1)}
+.pay-panel{margin-top:14px;display:grid;gap:10px}
+.pay-panel p{color:var(--tenue);font-size:.95rem}
+.demo-box{display:grid;gap:4px;padding:12px 14px;border-radius:12px;border:1.5px dashed var(--mar-texto);background:rgba(31,110,140,.14)}
+.demo-box b{display:flex;align-items:center;gap:8px;font-family:var(--label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mar-texto)}
+.demo-box p{color:var(--hueso)}
+.spin{width:20px;height:20px;border-radius:50%;border:3px solid rgba(181,169,144,.35);border-top-color:var(--hueso);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Final */
+.view-done{text-align:center}
+.done-badge{margin:22px auto 6px;width:132px;height:132px;border-radius:50%;background:var(--pino);display:flex;align-items:center;justify-content:center;gap:2px;color:var(--hueso);box-shadow:0 0 0 6px var(--carbon),0 0 0 7px var(--veta);animation:stamp .55s var(--rebote) both}
+.done-badge .ic{width:44px;height:44px}
+.done-badge .amp{font-family:var(--display);font-size:1.6rem}
+@keyframes stamp{from{transform:scale(.6) rotate(-8deg);opacity:0}to{transform:none;opacity:1}}
+.view-done .view-title{margin-top:14px}
+.view-done .card{text-align:left}
+.review{display:grid;gap:10px}
+.review p{color:var(--tenue);font-size:.95rem}
+.ex-tag{font-size:.72rem;letter-spacing:.12em;border:1px solid var(--tenue);color:var(--tenue);border-radius:4px;padding:1px 6px}
+.review .btn .ic{color:var(--naranja)}
+
+/* ---------- Toasts ---------- */
+.toasts{position:absolute;left:16px;right:16px;top:calc(var(--top-h,0px) + 10px);z-index:70;display:grid;gap:8px;justify-items:center;pointer-events:none}
+.toast{display:flex;align-items:center;gap:10px;max-width:100%;padding:10px 16px 10px 10px;border-radius:14px;background:var(--superficie);border:1px solid rgba(242,232,213,.55);color:var(--hueso);font-weight:600;font-size:.98rem;box-shadow:0 12px 30px rgba(0,0,0,.5);
+  opacity:0;transform:translateY(-12px) scale(.96);transition:opacity .25s ease-out,transform .35s var(--rebote)}
+.toast .ic{color:var(--hueso);background:var(--pino);border-radius:50%;padding:4px;width:28px;height:28px}
+.toast.in{opacity:1;transform:none}
+.toast.out{opacity:0;transform:translateY(-6px);transition-duration:.2s}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+
+<div class="stage">
+  <aside class="pitch" id="pitch"></aside>
+  <div class="phone" id="phone">
+    <div class="app" id="app">
+      <div class="ribbon g" id="ribbon"></div>
+      <header class="top g" id="top"></header>
+      <main class="scroller" id="scroller"></main>
+      <div class="bar g" id="bar" role="region" hidden></div>
+    </div>
+    <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+    <div class="layer" id="layer" hidden>
+      <div class="backdrop" data-act="sheet-close"></div>
+      <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title"></div>
+    </div>
+    <p class="sr-only" id="live" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+/* ==========================================================================
+   Diccionario ES / EN
+   ========================================================================== */
+const I18N = {
+  es: {
+    doc_title: 'Menú Hunters&Fishers',
+    pitch_label: 'Acerca de este prototipo',
+    pitch_kicker: '<span class="nt">ViBE</span> · Puerto Peñasco',
+    pitch_title: 'Prototipo ViBE para',
+    p1_t: 'Escanea.', p1: 'Así ve el menú tu cliente al escanear el QR de su mesa.',
+    p2_t: 'Pide.', p2: 'Cambia entre Hunters y Fishers, sube platillos a la canoa y mándalos a cocina.',
+    p3_t: 'Paga.', p3: 'Pide la cuenta, deja propina, divídela entre la banda y simula el pago.',
+    pitch_note: 'Datos, precios y fotos de ejemplo',
+    pitch_detail: 'Los precios sin * vienen de Uber Eats como referencia. La mesa, las salsas y casi todas las descripciones son de ejemplo.',
+    ribbon: '<b>Prototipo <span class="nt">ViBE</span></b> · Datos, precios y fotos de ejemplo',
+    ribbon_close: 'Cerrar aviso de prototipo',
+    lang_group: 'Idioma',
+    table: 'Mesa 7',
+    call_waiter: 'Llamar al mesero',
+    waiter_title: '¿Qué necesitas?',
+    waiter_sub: 'Le avisamos a tu mesero al instante.',
+    w_napkins: 'Traer servilletas o salsas',
+    w_round: 'Otra ronda de bebidas',
+    w_question: 'Tengo una pregunta',
+    toast_waiter: 'Tu mesero ya viene',
+    waiter_status: 'Mesero avisado hace {n} min',
+    waiter_now: 'Mesero avisado hace un momento',
+    waiter_done: 'Ya llegó',
+    close: 'Cerrar',
+    welcome: 'Bienvenidos a la cabaña',
+    hello_h: '¿Qué vas a cazar hoy?',
+    hello_f: '¿Qué vas a pescar hoy?',
+    side_group: 'Menú de tierra o de mar',
+    side_h_desc: 'Tierra: alitas, burgers, carnes y botanas',
+    side_f_desc: 'Mar: canoa de mariscos, pulpo, aguachile y tacos',
+    chips_label: 'Secciones del menú',
+    k_land: 'Tierra', k_sea: 'Mar', k_bar: 'De la barra',
+    sample_photo: 'Foto de ejemplo',
+    sample_price: 'Precio de ejemplo',
+    sample_price_sr: 'precio de ejemplo',
+    footnote: '<b>*</b> Precio de ejemplo. Los precios sin * se tomaron de Uber Eats como referencia y pueden cambiar. Las descripciones son de ejemplo, salvo las de las canoas, la Cazador Burger y el pulpo.',
+    serves2: 'Para 2',
+    qty: 'Cantidad', dec: 'Uno menos', inc: 'Uno más',
+    note_label: 'Nota para cocina (opcional)',
+    note_ph: 'Ej. sin cebolla',
+    required: 'Obligatorio',
+    choose_sauce: 'Elige tu salsa', sauces_hint: 'Salsas de ejemplo',
+    choose_protein: 'Elige tu proteína',
+    opt_error: 'Elige una opción para continuar',
+    max_qty: 'Llegaste al máximo: {n} por platillo.',
+    add_btn: 'Agregar a la canoa · {price}',
+    added: '{name} va en la canoa. {count}.',
+    bar_label: 'Tu canoa',
+    bar_empty_hint: 'Vacía. Toca un platillo para subirlo.',
+    bar_view: 'Ver canoa',
+    item_one: '1 artículo', item_many: '{n} artículos',
+    cart_title: 'Tu canoa',
+    cart_empty: 'Aún no hay nada en la canoa. ¡A cazar!',
+    subtotal: 'Subtotal',
+    each: 'c/u',
+    remove_line: 'Quitar {name}',
+    line_removed: '{name} salió de la canoa',
+    line_dec: 'Uno menos de {name}', line_inc: 'Uno más de {name}',
+    send_kitchen: 'Enviar a cocina',
+    keep_ordering: 'Seguir pidiendo',
+    toast_sent: 'Ronda {n} enviada a cocina',
+    status_title: 'Tu pedido',
+    status_lead: 'Aquí no tienes que salir a cazarlo: te avisamos en cuanto vaya a tu mesa.',
+    st0: 'Recibido', st1: 'En la cocina', st2: 'A tu mesa',
+    round_n: 'Ronda {n}',
+    sent_at: 'Enviada a las {time}',
+    demo_sim: 'Simulación para la demo',
+    toast_enjoy: '¡Buen provecho!',
+    another_round: 'Pedir otra ronda',
+    ask_bill: 'Pedir la cuenta',
+    back_menu: 'Menú',
+    view_order: 'Ver mi pedido',
+    bill_title: 'La cuenta',
+    rounds_one: '1 ronda', rounds_many: '{n} rondas',
+    iva: 'Precios con IVA incluido (ejemplo)',
+    tip: 'Propina', tip_none: 'Sin propina', tip_other: 'Otra',
+    tip_amount_label: 'Monto de propina en pesos',
+    tip_err: 'Escribe un monto en pesos, como 150 o 150.50.',
+    tip_err_high: 'Revisa el monto: {amt} es más que tu consumo.',
+    tip_hint: 'La propina es voluntaria.',
+    total: 'Total',
+    split: 'Dividir la cuenta',
+    split_one: 'Uno paga todo', split_equal: 'Partes iguales', split_person: 'Por persona',
+    one_note: 'Una sola persona paga el total.',
+    people: 'Personas', fewer: 'Una persona menos', more: 'Una persona más',
+    each_pays: 'Cada quien paga',
+    cents_diff: 'Para cuadrar al centavo: {hi} y {lo}.',
+    pp_one: '1 persona paga {amt}', pp_many: '{n} personas pagan {amt}',
+    even_ok: 'Cuadra exacto, sin centavos de diferencia.',
+    person_n: 'Persona {n}',
+    assign_hint: 'Toca quién pidió cada cosa. Si la comparten, marca a varios.',
+    who: '¿Quién pidió {name}?',
+    unassigned_one: '1 cosa sin asignar ({amt}). Asígnala para continuar.',
+    unassigned_many: '{n} cosas sin asignar ({amt}). Asígnalas para continuar.',
+    all_assigned: 'Todo asignado. ¡Cuentas claras!',
+    tip_prop: 'La propina se reparte en proporción a lo que pidió cada quien.',
+    food: 'Consumo',
+    go_pay: 'Ir a pagar',
+    pay_title: '¿Cómo quieres pagar?',
+    pay_amount: 'Total a pagar',
+    pay_card: 'Pagar con tarjeta en la mesa', pay_card_d: 'Tu mesero te trae la terminal.',
+    pay_online: 'Pagar en línea (demo)', pay_online_d: 'Así se vería el pago desde el celular.',
+    pay_cash: 'Efectivo', pay_cash_d: 'Tu mesero pasa por el pago.',
+    pick_method: 'Elige un método para continuar.',
+    card_panel: 'Tu mesero lleva la terminal a la Mesa 7.',
+    cash_panel: 'Tu mesero pasa a la Mesa 7 por el efectivo y te trae el cambio.',
+    notify_server: 'Avisar al mesero',
+    pick_short: 'Elige método',
+    unsent: 'Tienes {items} en la canoa sin enviar a cocina. No aparecen en la cuenta hasta que los envíes.',
+    demo_nocharge: 'Demo: no se cobra nada',
+    online_panel: 'Aquí iría la pasarela de pago del restaurante. Esta demo nunca pide datos de tarjeta.',
+    simulate: 'Simular pago', processing: 'Procesando…',
+    sum_equal: '{n} × {amt}',
+    sum_equal_rem: '{hi} y {lo}',
+    sum_person: 'Por persona',
+    done_title: '¡Gracias por cazar con nosotros!',
+    done_sub: 'Cuenta saldada. Vuelve pronto: aquí siempre hay mesa para la banda.',
+    done_sub_card: 'Tu mesero va a la Mesa 7 con la terminal. Vuelve pronto: aquí siempre hay mesa para la banda.',
+    done_sub_cash: 'Tu mesero va a la Mesa 7 por el efectivo. Vuelve pronto: aquí siempre hay mesa para la banda.',
+    summary: 'Resumen',
+    paid: 'Pagado', tip_incl: 'Propina', method: 'Método', rounds_label: 'Rondas', split_label: 'División',
+    m_card: 'Tarjeta en la mesa', m_online: 'En línea (demo)', m_cash: 'Efectivo',
+    review_q: '¿Qué tal estuvo la cacería? Tu reseña ayuda a que más gente encuentre la cabaña.',
+    review: 'Dejar reseña en Google', example: 'Ejemplo',
+    restart: 'Reiniciar demo',
+    toast_restart: 'Demo reiniciada',
+    toast_paid: 'Pago registrado',
+    usd_note: 'approx., sample exchange rate'
+  },
+  en: {
+    doc_title: 'Hunters&Fishers Menu',
+    pitch_label: 'About this prototype',
+    pitch_kicker: '<span class="nt">ViBE</span> · Puerto Peñasco',
+    pitch_title: 'ViBE prototype for',
+    p1_t: 'Scan.', p1: 'This is what guests see after scanning the QR code on their table.',
+    p2_t: 'Order.', p2: 'Switch between Hunters and Fishers, load dishes into the canoe and send them to the kitchen.',
+    p3_t: 'Pay.', p3: 'Get the check, add a tip, split it with the crew and simulate the payment.',
+    pitch_note: 'Sample data, prices and photos',
+    pitch_detail: 'Prices without * come from Uber Eats as a reference. The table, sauces and most descriptions are samples.',
+    ribbon: '<b><span class="nt">ViBE</span> prototype</b> · Sample data, prices and photos',
+    ribbon_close: 'Dismiss prototype notice',
+    lang_group: 'Language',
+    table: 'Table 7',
+    call_waiter: 'Call your server',
+    waiter_title: 'What do you need?',
+    waiter_sub: 'We’ll let your server know right away.',
+    w_napkins: 'Napkins or sauces',
+    w_round: 'Another round of drinks',
+    w_question: 'I have a question',
+    toast_waiter: 'Your server is on the way',
+    waiter_status: 'Server notified {n} min ago',
+    waiter_now: 'Server notified just now',
+    waiter_done: 'They’re here',
+    close: 'Close',
+    welcome: 'Welcome to the cabin',
+    hello_h: 'What are we hunting today?',
+    hello_f: 'What’s the catch today?',
+    side_group: 'Land or sea menu',
+    side_h_desc: 'Land: wings, burgers, grill and bar bites',
+    side_f_desc: 'Sea: seafood canoe, octopus and tacos',
+    chips_label: 'Menu sections',
+    k_land: 'Land', k_sea: 'Sea', k_bar: 'From the bar',
+    sample_photo: 'Sample photo',
+    sample_price: 'Sample price',
+    sample_price_sr: 'sample price',
+    footnote: '<b>*</b> Sample price. Prices without * were taken from Uber Eats as a reference and may change. Descriptions are samples, except for the canoes, the Cazador Burger and the octopus.',
+    serves2: 'Serves 2',
+    qty: 'Quantity', dec: 'One less', inc: 'One more',
+    note_label: 'Note for the kitchen (optional)',
+    note_ph: 'E.g. no onions',
+    required: 'Required',
+    choose_sauce: 'Pick your sauce', sauces_hint: 'Sample sauces',
+    choose_protein: 'Pick your protein',
+    opt_error: 'Pick an option to continue',
+    max_qty: 'That’s the max: {n} per item.',
+    add_btn: 'Add to canoe · {price}',
+    added: '{name} is in the canoe. {count}.',
+    bar_label: 'Your canoe',
+    bar_empty_hint: 'Empty. Tap a dish to load it.',
+    bar_view: 'View canoe',
+    item_one: '1 item', item_many: '{n} items',
+    cart_title: 'Your canoe',
+    cart_empty: 'Nothing in the canoe yet. Go get ’em!',
+    subtotal: 'Subtotal',
+    each: 'each',
+    remove_line: 'Remove {name}',
+    line_removed: '{name} removed from your canoe',
+    line_dec: 'One less {name}', line_inc: 'One more {name}',
+    send_kitchen: 'Send to kitchen',
+    keep_ordering: 'Keep ordering',
+    toast_sent: 'Round {n} sent to the kitchen',
+    status_title: 'Your order',
+    status_lead: 'No hunting required: we’ll let you know when it’s headed to your table.',
+    st0: 'Received', st1: 'In the kitchen', st2: 'At your table',
+    round_n: 'Round {n}',
+    sent_at: 'Sent at {time}',
+    demo_sim: 'Simulated for the demo',
+    toast_enjoy: 'Enjoy your meal!',
+    another_round: 'Order another round',
+    ask_bill: 'Get the check',
+    back_menu: 'Menu',
+    view_order: 'View my order',
+    bill_title: 'The check',
+    rounds_one: '1 round', rounds_many: '{n} rounds',
+    iva: 'Prices include tax (IVA) · sample',
+    tip: 'Tip', tip_none: 'No tip', tip_other: 'Other',
+    tip_amount_label: 'Tip amount in pesos',
+    tip_err: 'Enter an amount in pesos, like 150 or 150.50.',
+    tip_err_high: 'Check the amount: {amt} is more than your food and drinks.',
+    tip_hint: 'Tipping is optional.',
+    total: 'Total',
+    split: 'Split the check',
+    split_one: 'One pays all', split_equal: 'Split evenly', split_person: 'By person',
+    one_note: 'One person covers the whole check.',
+    people: 'People', fewer: 'One fewer person', more: 'One more person',
+    each_pays: 'Each person pays',
+    cents_diff: 'Doesn’t split evenly: {hi} and {lo}.',
+    pp_one: '1 person pays {amt}', pp_many: '{n} people pay {amt}',
+    even_ok: 'Splits evenly, no cents left over.',
+    person_n: 'Person {n}',
+    assign_hint: 'Tap who had each item. Sharing? Tap more than one.',
+    who: 'Who had {name}?',
+    unassigned_one: '1 item unassigned ({amt}). Assign it to continue.',
+    unassigned_many: '{n} items unassigned ({amt}). Assign them to continue.',
+    all_assigned: 'Everything’s assigned. All squared away!',
+    tip_prop: 'The tip is split in proportion to what each person ordered.',
+    food: 'Food & drinks',
+    go_pay: 'Continue to pay',
+    pay_title: 'How would you like to pay?',
+    pay_amount: 'Amount due',
+    pay_card: 'Pay by card at the table', pay_card_d: 'Your server brings the card terminal.',
+    pay_online: 'Pay online (demo)', pay_online_d: 'A preview of paying from your phone.',
+    pay_cash: 'Cash', pay_cash_d: 'Your server will come by to collect.',
+    pick_method: 'Pick a method to continue.',
+    card_panel: 'Your server brings the terminal to Table 7.',
+    cash_panel: 'Your server will swing by Table 7 to collect and bring your change.',
+    notify_server: 'Notify my server',
+    pick_short: 'Pick a method',
+    unsent: 'You have {items} in your canoe that haven’t gone to the kitchen. They won’t show on the check until you send them.',
+    demo_nocharge: 'Demo: no charge is made',
+    online_panel: 'The restaurant’s payment provider would go here. This demo never asks for card details.',
+    simulate: 'Simulate payment', processing: 'Processing…',
+    sum_equal: '{n} × {amt}',
+    sum_equal_rem: '{hi}, {lo}',
+    sum_person: 'By person',
+    done_title: 'Thanks for hunting with us!',
+    done_sub: 'You’re all settled up. Come back soon, there’s always a table for the crew.',
+    done_sub_card: 'Your server is headed to Table 7 with the terminal. Come back soon, there’s always a table for the crew.',
+    done_sub_cash: 'Your server is headed to Table 7 to collect. Come back soon, there’s always a table for the crew.',
+    summary: 'Summary',
+    paid: 'Paid', tip_incl: 'Tip', method: 'Method', rounds_label: 'Rounds', split_label: 'Split',
+    m_card: 'Card at the table', m_online: 'Online (demo)', m_cash: 'Cash',
+    review_q: 'How was the hunt? A review helps more folks find the cabin.',
+    review: 'Leave a Google review', example: 'Example',
+    restart: 'Restart demo',
+    toast_restart: 'Demo restarted',
+    toast_paid: 'Payment recorded',
+    usd_note: 'approx., sample exchange rate'
+  }
+};
+
+/* ==========================================================================
+   Iconos SVG en línea (trazo a mano, sencillos)
+   ========================================================================== */
+const S48 = 'viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"';
+const S24 = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+const IC = {
+  antler: `<svg ${S48}><path d="M24 42V31"/><path d="M24 31c-7 0-11-5-12-12"/><path d="M12 19c-.5-5 1-9 4-12"/><path d="M12.6 22.5C8 22 5 19 4 15"/><path d="M14.5 27c-3.5 1-7 .5-9.5-1.5"/><path d="M24 31c7 0 11-5 12-12"/><path d="M36 19c.5-5-1-9-4-12"/><path d="M35.4 22.5C40 22 43 19 44 15"/><path d="M33.5 27c3.5 1 7 .5 9.5-1.5"/></svg>`,
+  fish: `<svg ${S48}><path d="M5 24c5-7 12-10 19-10 7 0 11 4 14 10-3 6-7 10-14 10-7 0-14-3-19-10z"/><path d="M38 24l6-6v12z"/><path d="M21 18.5c1.6 3.6 1.6 7.4 0 11"/><circle cx="12.5" cy="22.5" r="1.3" fill="currentColor" stroke="none"/></svg>`,
+  hook: `<svg ${S48}><circle cx="30" cy="6.5" r="2.5"/><path d="M30 9v20a9 9 0 0 1-18 0v-4"/><path d="M12 25l-4 4.5"/><path d="M30 17h5"/></svg>`,
+  mug: `<svg ${S48}><path d="M9 15h23v24a3 3 0 0 1-3 3H12a3 3 0 0 1-3-3z"/><path d="M32 20h4a5 5 0 0 1 5 5v5a5 5 0 0 1-5 5h-4"/><path d="M9 15c0-4 3-7 7-7 2-2.5 6.5-2.5 8.5 0 4 0 7.5 3 7.5 7"/><path d="M16 22v14M24.5 22v14"/></svg>`,
+  canoe: `<svg ${S48}><path d="M3 23c13 6 29 6 42 0l-5 8.5c-10 4-22 4-32 0z"/><path d="M31 7L20 31"/><path d="M29.6 4l5 2.3-1.8 3.8-5-2.3z"/><path d="M5 40c3-2 6-2 9.5 0s6.5 2 9.5 0 6.5-2 9.5 0 6.5 2 9.5 0"/></svg>`,
+  flame: `<svg ${S48}><path d="M24 44c-8 0-14-5.5-14-13 0-8 6-12 8-20 4 4 5 8 5 11 2-2 3-5 3-8 6 5 12 11 12 18 0 7-6 12-14 12z"/><path d="M24 44c-3.5 0-6-2.5-6-6 0-3 2.5-6 5-9 2 3 7 5 7 9 0 3.5-2.5 6-6 6z"/></svg>`,
+  pepper: `<svg ${S48}><path d="M34 15c-1 9-5 17-12 22-4.5 3.2-9.5 5-16 5 4.5-3 7.5-7.5 9.5-12.5 3-7 8-12.5 13-14.5 2.2-.9 4.3-.9 5.5 0z"/><path d="M34 15c.5-4.5 3-7.5 7-8.5"/><path d="M28.5 15.5c1.5-2.5 4.5-3.4 7-1.8"/></svg>`,
+  burger: `<svg ${S48}><path d="M8 20c0-7 7-12 16-12s16 5 16 12z"/><path d="M6 26h36"/><path d="M8 31c4 2 8 2 12 0s8-2 12 0 6 2 8 0"/><path d="M9 36h30v1a4 4 0 0 1-4 4H13a4 4 0 0 1-4-4z"/><path d="M18 14v.01M24 12v.01M30 14v.01"/></svg>`,
+  steak: `<svg ${S48}><path d="M9 31c-3-8 2-18 12-20 7-1.5 12 1 15 5 3 4 2 8 4 11 2 3 1 8-5 9-6 1-9-3-14-3s-9 5-12-2z"/><circle cx="20" cy="23" r="4"/><path d="M27 30c3 0 6-1 8-3"/></svg>`,
+  cheese: `<svg ${S48}><path d="M5 31l26-16 12 8v15H5z"/><path d="M5 31h38"/><circle cx="15" cy="35" r="2"/><circle cx="34" cy="35" r="2.2"/><circle cx="29" cy="24" r="1.6"/></svg>`,
+  fries: `<svg ${S48}><path d="M12 22h24l-3 20H15z"/><path d="M15 22l-2-13M20 22l-1-15M25 22l1-14M30 22l2-12M34 22l3-10"/></svg>`,
+  octopus: `<svg ${S48}><path d="M13 28c-2-12 4-20 11-20s13 8 11 20"/><path d="M13 28c-2 4-6 6-9 5"/><path d="M18 30c-1 5-3 9-7 10"/><path d="M24 30v11"/><path d="M30 30c1 5 3 9 7 10"/><path d="M35 28c2 4 6 6 9 5"/><circle cx="19.5" cy="20" r="1.4" fill="currentColor" stroke="none"/><circle cx="28.5" cy="20" r="1.4" fill="currentColor" stroke="none"/></svg>`,
+  shrimp: `<svg ${S48}><path d="M35 10C23 8 11 16 11 28c0 7 5 12 12 12 5 0 8-3 8-6"/><path d="M35 10c4 6 4 14-2 20"/><path d="M16 20l6 4M14 28h7M18 35l5-4"/><path d="M31 34l6 4-6 2"/><path d="M35 10l8-4M36 13l8 1"/></svg>`,
+  taco: `<svg ${S48}><path d="M5 35a19 19 0 0 1 38 0z"/><path d="M11 33c1-6 4-10 8-12M18 33c1-5 4-9 9-11M28 33c2-4 5-7 9-8"/></svg>`,
+  bucket: `<svg ${S48}><path d="M8 22h32l-4 20H12z"/><path d="M8 22C8 10 40 10 40 22"/><path d="M18 22v-6M24 22v-8M30 22v-6"/><circle cx="18" cy="14" r="1.6"/><circle cx="24" cy="12" r="1.6"/><circle cx="30" cy="14" r="1.6"/><path d="M11 30h26"/></svg>`,
+  glass: `<svg ${S48}><path d="M15 6h18c0 10-3 16-9 16s-9-6-9-16z"/><path d="M15.5 12h17"/><path d="M24 22v16"/><path d="M16 42h16"/></svg>`,
+  rocks: `<svg ${S48}><path d="M11 12h26l-3 28H14z"/><path d="M13 22h22"/><rect x="17" y="27" width="7" height="7" rx="1.5"/><rect x="25" y="25" width="6" height="6" rx="1.5"/></svg>`,
+  lemon: `<svg ${S48}><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="12"/><path d="M24 12v24M12 24h24M15.5 15.5l17 17M32.5 15.5l-17 17"/></svg>`,
+  bell: `<svg ${S24}><path d="M6 10a6 6 0 0 1 12 0c0 5 1.5 7 3 8H3c1.5-1 3-3 3-8z"/><path d="M10 21h4"/><path d="M12 2v2"/></svg>`,
+  check: `<svg ${S24}><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`,
+  x: `<svg ${S24}><path d="M6 6l12 12M18 6L6 18"/></svg>`,
+  plus: `<svg ${S24}><path d="M12 5v14M5 12h14"/></svg>`,
+  minus: `<svg ${S24}><path d="M5 12h14"/></svg>`,
+  back: `<svg ${S24}><path d="M15 5l-7 7 7 7"/></svg>`,
+  trash: `<svg ${S24}><path d="M4 7h16M10 7V4h4v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>`,
+  send: `<svg ${S24}><path d="M4 12l16-8-6 16-3-7z"/><path d="M11 13l9-9"/></svg>`,
+  card: `<svg ${S24}><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg>`,
+  phone: `<svg ${S24}><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M11 18.5h2"/></svg>`,
+  cash: `<svg ${S24}><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9.5v.01M18 14.5v.01"/></svg>`,
+  info: `<svg ${S24}><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg>`,
+  alert: `<svg ${S24}><path d="M12 3.5l9.5 17h-19z"/><path d="M12 10v4.5M12 17.5v.01"/></svg>`,
+  star: `<svg ${S24}><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/></svg>`,
+  restart: `<svg ${S24}><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v5h5"/></svg>`,
+  question: `<svg ${S24}><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.6.3-.9.9-.9 1.6v.4M12 17v.01"/></svg>`
+};
+const CANOE_FILLED = '<svg viewBox="0 0 96 44" aria-hidden="true" focusable="false"><path d="M4 14 Q48 22 92 14 L82 32 Q48 40 14 32 Z" fill="#8B5E3C"/><path d="M10 16.5 Q48 23.5 86 16.5" stroke="#1C1915" stroke-opacity=".35" stroke-width="2" fill="none"/><path d="M14 32 Q48 40 82 32" stroke="#F2E8D5" stroke-opacity=".35" stroke-width="2" fill="none"/><path d="M0 42 q8 -4 16 0 t16 0 t16 0 t16 0 t16 0 t16 0" stroke="#5FB3CF" stroke-opacity=".6" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+function icon(name, cls) {
+  return IC[name].replace('<svg', `<svg class="ic${cls ? ' ' + cls : ''}" aria-hidden="true" focusable="false"`);
+}
+
+/* ==========================================================================
+   Menú (precios en pesos; ref = precio de referencia de Uber Eats)
+   ========================================================================== */
+const SAUCES = { label: 'choose_sauce', hint: 'sauces_hint', choices: [
+  { id: 'bufalo', es: 'Búfalo', en: 'Buffalo' },
+  { id: 'bbq', es: 'BBQ', en: 'BBQ' },
+  { id: 'mango', es: 'Mango habanero', en: 'Mango habanero' },
+  { id: 'lemon', es: 'Lemon pepper', en: 'Lemon pepper' }
+]};
+const PROTEIN = { label: 'choose_protein', choices: [
+  { id: 'marlin', es: 'Marlin', en: 'Marlin' },
+  { id: 'pulpo', es: 'Pulpo', en: 'Octopus' },
+  { id: 'camaron', es: 'Camarón', en: 'Shrimp' }
+]};
+const SECTIONS = [
+  { id: 'h-share', side: 'hunters', icon: 'canoe', name: { es: 'Para compartir', en: 'For the table' }, items: [
+    { id: 'canoa-cazador', price: 570, ref: true, feature: true, serves: 2,
+      tag: { es: 'La favorita', en: 'House favorite' },
+      name: { es: 'Canoa Cazador', en: 'Canoa Cazador' },
+      desc: { es: 'Alitas, boneless, dedos de queso, papas y jalapeños poppers.', en: 'Wings, boneless, cheese sticks, fries and jalapeño poppers.' } }
+  ]},
+  { id: 'h-wings', side: 'hunters', icon: 'antler', name: { es: 'Alitas', en: 'Wings' }, items: [
+    { id: 'alitas', price: 165, ref: true, opt: SAUCES,
+      name: { es: 'Alitas 12 pzs', en: 'Wings · 12 pcs' },
+      desc: { es: 'Doce piezas bañadas en la salsa que elijas.', en: 'Twelve pieces tossed in the sauce of your choice.' } },
+    { id: 'boneless', ic: 'pepper', price: 175, opt: SAUCES,
+      name: { es: 'Boneless', en: 'Boneless wings' },
+      desc: { es: 'Trozos de pechuga empanizada con la salsa que elijas.', en: 'Breaded chicken breast bites in the sauce of your choice.' } }
+  ]},
+  { id: 'h-burgers', side: 'hunters', icon: 'flame', name: { es: 'Burgers y carnes', en: 'Burgers & grill' }, items: [
+    { id: 'cazador-burger', ic: 'burger', price: 195,
+      name: { es: 'Cazador Burger', en: 'Cazador Burger' },
+      desc: { es: 'Carne de 150 g, pan de la casa, chiles asados, cebolla morada, tocino y queso amarillo. Con papas.', en: '150 g patty, house-made bun, roasted chiles, red onion, bacon and American cheese. Served with fries.' } },
+    { id: 'costillas', ic: 'flame', price: 320,
+      name: { es: 'Costillas BBQ', en: 'BBQ ribs' },
+      desc: { es: 'Costillas de cerdo glaseadas en salsa BBQ, con papas.', en: 'Pork ribs glazed in BBQ sauce, with fries.' } },
+    { id: 'corte', ic: 'steak', price: 420,
+      name: { es: 'Corte a la parrilla', en: 'Grilled steak' },
+      desc: { es: 'Corte de res a la parrilla con guarnición del día.', en: 'Grilled beef cut with the side of the day.' } }
+  ]},
+  { id: 'h-bites', side: 'hunters', icon: 'pepper', name: { es: 'Botanas', en: 'Bar bites' }, items: [
+    { id: 'queso-fundido', ic: 'cheese', price: 180, ref: true,
+      name: { es: 'Queso fundido', en: 'Queso fundido' },
+      desc: { es: 'Queso derretido para compartir, con tortillas.', en: 'Melted cheese to share, with tortillas.' } },
+    { id: 'papas-cargadas', ic: 'fries', price: 215, ref: true,
+      name: { es: 'Papas cargadas con pollo', en: 'Loaded fries with chicken' },
+      desc: { es: 'Papas a la francesa con pollo, queso y aderezo.', en: 'French fries loaded with chicken, cheese and dressing.' } },
+    { id: 'dedos-queso', ic: 'cheese', price: 150,
+      name: { es: 'Dedos de queso', en: 'Cheese sticks' },
+      desc: { es: 'Empanizados y dorados, con salsa para dipear.', en: 'Breaded and golden, with dipping sauce.' } },
+    { id: 'guacamole', ic: 'pepper', price: 140,
+      name: { es: 'Guacamole', en: 'Guacamole' },
+      desc: { es: 'Aguacate, cebolla, cilantro y chile, con totopos.', en: 'Avocado, onion, cilantro and chile, with tortilla chips.' } }
+  ]},
+  { id: 'f-share', side: 'fishers', icon: 'canoe', name: { es: 'Para compartir', en: 'For the table' }, items: [
+    { id: 'canoa-fishers', price: 620, ref: true, feature: true,
+      tag: { es: 'Para la banda', en: 'For the crew' },
+      name: { es: 'Canoa Fishers', en: 'Canoa Fishers' },
+      desc: { es: 'Camarón, calamar y trozos de pescado.', en: 'Shrimp, calamari and fish bites.' } }
+  ]},
+  { id: 'f-sea', side: 'fishers', icon: 'fish', name: { es: 'Del mar', en: 'From the sea' }, items: [
+    { id: 'pulpo', ic: 'octopus', price: 340,
+      name: { es: 'Pulpo a la parrilla', en: 'Grilled octopus' },
+      desc: { es: 'Marinado en salsa de la casa, con papas cambray.', en: 'Marinated in our house sauce, with baby potatoes.' } },
+    { id: 'aguachile', ic: 'shrimp', price: 260,
+      name: { es: 'Aguachile de camarón', en: 'Shrimp aguachile' },
+      desc: { es: 'Camarón en limón y chile, con pepino y cebolla morada.', en: 'Shrimp cured in lime and chile, with cucumber and red onion.' } },
+    { id: 'calamares', ic: 'hook', price: 205, ref: true,
+      name: { es: 'Calamares fritos', en: 'Fried calamari' },
+      desc: { es: 'Anillos de calamar dorados, con limón y salsa.', en: 'Golden calamari rings with lime and salsa.' } },
+    { id: 'ajo', ic: 'fish', price: 280,
+      name: { es: 'Ajo de camarón y pescado', en: 'Garlic shrimp & fish' },
+      desc: { es: 'Camarón y pescado al ajo.', en: 'Shrimp and fish sautéed in garlic.' } }
+  ]},
+  { id: 'f-tacos', side: 'fishers', icon: 'hook', name: { es: 'Tacos y tostadas', en: 'Tacos & tostadas' }, items: [
+    { id: 'gobernador', ic: 'taco', price: 210,
+      name: { es: 'Tacos gobernador (3)', en: 'Gobernador tacos (3)' },
+      desc: { es: 'Camarón con queso y chile en tortilla dorada.', en: 'Shrimp, melted cheese and peppers in a crispy tortilla.' } },
+    { id: 'tacos-mar', ic: 'taco', price: 195, opt: PROTEIN,
+      name: { es: 'Tacos de marlin, pulpo o camarón (3)', en: 'Marlin, octopus or shrimp tacos (3)' },
+      desc: { es: 'Tres tacos de la proteína que elijas.', en: 'Three tacos with the protein of your choice.' } },
+    { id: 'tostada-atun', ic: 'fish', price: 120,
+      name: { es: 'Tostada de atún', en: 'Tuna tostada' },
+      desc: { es: 'Atún fresco sobre tostada, con aguacate.', en: 'Fresh tuna on a crispy tostada, with avocado.' } }
+  ]},
+  { id: 'drinks', side: 'both', icon: 'mug', name: { es: 'Bebidas', en: 'Drinks' }, items: [
+    { id: 'cerveza', ic: 'mug', price: 55, name: { es: 'Cerveza nacional', en: 'Mexican beer' },
+      desc: { es: 'Bien fría, como debe ser.', en: 'Ice cold, the way it should be.' } },
+    { id: 'cubeta', ic: 'bucket', price: 300, name: { es: 'Cubeta de 6 cervezas', en: 'Bucket of 6 beers' },
+      desc: { es: 'Para la mesa que viene a ver el partido.', en: 'For the table that’s here for the game.' } },
+    { id: 'sangria', ic: 'glass', price: 110, name: { es: 'Sangría', en: 'Sangria' },
+      desc: { es: 'Vino tinto con fruta.', en: 'Red wine with fruit.' } },
+    { id: 'carajillo', ic: 'rocks', price: 150, name: { es: 'Carajillo', en: 'Carajillo' },
+      desc: { es: 'Licor 43 con espresso.', en: 'Licor 43 with espresso.' } },
+    { id: 'limonada', ic: 'lemon', price: 60, name: { es: 'Limonada', en: 'Limeade' },
+      desc: { es: 'Natural o mineral.', en: 'Still or sparkling.' } }
+  ]}
+];
+const ITEMS = {};
+SECTIONS.forEach(s => s.items.forEach(it => { it.side = s.side; it.icon = it.ic || s.icon; ITEMS[it.id] = it; }));
+
+/* ==========================================================================
+   Estado central
+   ========================================================================== */
+const STEP_MS = 4000;
+const MAX_QTY = 20; /* tope por línea, igual en detalle, canoa y al fusionar */
+const WAITER_STRIP_MS = 8000; /* la tira del mesero se compacta en un punto sobre la campana */
+const FX = 18; /* MXN por USD, tipo de cambio de ejemplo */
+const SEDAL_W = ['14%', '56%', '100%'];
+const freshState = (lang) => ({
+  lang, side: 'hunters', view: 'menu', ribbon: true,
+  cart: [], rounds: [], waiter: null,
+  sheet: null, draft: null,
+  tip: { mode: 'unset', pct: 0, raw: '', cents: 0, err: '' },
+  split: { mode: 'one', n: 2, people: 2, assign: {} },
+  pay: { method: null, processing: false },
+  paid: null
+});
+let state = freshState('es');
+
+/* ==========================================================================
+   Utilidades
+   ========================================================================== */
+const $ = (id) => document.getElementById(id);
+const phone = $('phone'), app = $('app'), scroller = $('scroller'), bar = $('bar');
+const layer = $('layer'), sheetEl = $('sheet'), toasts = $('toasts'), live = $('live');
+const RM = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+const NF = {
+  es: new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }),
+  en: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'MXN' }),
+  usd: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+};
+function t(key, vars) {
+  let s = I18N[state.lang][key];
+  if (s == null) s = I18N.es[key] != null ? I18N.es[key] : key;
+  if (vars) s = s.replace(/\{(\w+)\}/g, (m, k) => (vars[k] != null ? vars[k] : m));
+  return s;
+}
+const L = (o) => (o ? (o[state.lang] != null ? o[state.lang] : o.es) : '');
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const money = (cents) => NF[state.lang].format(cents / 100);
+const usd = (cents) => NF.usd.format(cents / 100 / FX);
+const fmtTime = (ts) => new Date(ts).toLocaleTimeString(state.lang === 'es' ? 'es-MX' : 'en-US', { hour: 'numeric', minute: '2-digit' });
+const itemsLabel = (n) => (n === 1 ? t('item_one') : t('item_many', { n }));
+const roundsLabel = (n) => (n === 1 ? t('rounds_one') : t('rounds_many', { n }));
+const cartCount = () => state.cart.reduce((a, l) => a + l.qty, 0);
+const cartSub = () => state.cart.reduce((a, l) => a + l.unit * l.qty, 0);
+const lineName = (l) => L(ITEMS[l.itemId].name);
+const optName = (l) => {
+  const it = ITEMS[l.itemId];
+  if (!it.opt || !l.opt) return '';
+  const c = it.opt.choices.find(x => x.id === l.opt);
+  return c ? L(c) : '';
+};
+const waiterMins = () => (state.waiter ? Math.max(0, Math.floor((Date.now() - state.waiter.at) / 60000)) : 0);
+const waiterText = () => { const n = waiterMins(); return n ? t('waiter_status', { n }) : t('waiter_now'); };
+const ppLabel = (n, cents) => t(n === 1 ? 'pp_one' : 'pp_many', { n, amt: money(cents) });
+const behavior = () => (RM.matches ? 'auto' : 'smooth');
+
+function announce(msg) {
+  live.textContent = '';
+  setTimeout(() => { live.textContent = msg; }, 40);
+}
+/* Los toasts guardan clave y variables para traducirse si cambia el idioma */
+function toastInner(el) {
+  return icon(el.dataset.ic) + '<span>' + esc(t(el.dataset.key, JSON.parse(el.dataset.vars))) + '</span>';
+}
+function toast(key, vars, ic) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.dataset.key = key;
+  el.dataset.vars = JSON.stringify(vars || {});
+  el.dataset.ic = ic || 'check';
+  el.innerHTML = toastInner(el);
+  toasts.appendChild(el);
+  while (toasts.children.length > 2) toasts.firstChild.remove();
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
+  setTimeout(() => {
+    el.classList.remove('in'); el.classList.add('out');
+    setTimeout(() => el.remove(), 260);
+  }, 2600);
+}
+function retranslateToasts() { toasts.querySelectorAll('.toast').forEach(el => { el.innerHTML = toastInner(el); }); }
+function clearToasts() { toasts.innerHTML = ''; }
+function measureChrome() {
+  phone.style.setProperty('--bar-h', bar.hidden ? '0px' : bar.offsetHeight + 'px');
+  phone.style.setProperty('--top-h', scroller.offsetTop + 'px');
+}
+function focusKey(el) {
+  if (!el || el === document.body) return null;
+  if (el.dataset && el.dataset.act) {
+    return `[data-act="${el.dataset.act}"]` + (el.dataset.arg != null ? `[data-arg="${CSS.escape(el.dataset.arg)}"]` : '');
+  }
+  if (el.id) return '#' + CSS.escape(el.id);
+  return null;
+}
+function keepFocus(fn) {
+  const key = focusKey(document.activeElement);
+  fn();
+  if (key) {
+    const n = document.querySelector(key);
+    if (n && n !== document.activeElement) n.focus({ preventScroll: true });
+  }
+}
+
+/* ==========================================================================
+   Piezas reutilizables
+   ========================================================================== */
+/* Variación por platillo (luz, ángulo del icono) para que no se vea plantilla */
+function hashId(id) { let h = 7; for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % 9973; return h; }
+function photoHTML(it, cls) {
+  const h = hashId(it.id);
+  const style = `--lx:${18 + h % 60}%;--ly:${8 + (h >> 3) % 30}%;--rot:${(h % 25) - 12}deg`;
+  return `<span class="photo ph-${it.side} ${cls || ''}" style="${style}" aria-hidden="true">${icon(it.icon)}<span class="ph-tag">${t('sample_photo')}</span></span>`;
+}
+function priceHTML(it, cents) {
+  const sample = !it.ref;
+  return `<span class="pr">${money(cents)}${sample ? `<span class="star" aria-hidden="true">*</span><span class="sr-only">, ${t('sample_price_sr')}</span>` : ''}</span>`;
+}
+function stepperHTML(act, val, min, max, labelId, decLabel, incLabel, argPrefix) {
+  const p = argPrefix != null ? argPrefix + ':' : '';
+  return `<div class="stepper" role="group" aria-labelledby="${labelId}">
+    <button type="button" data-act="${act}" data-arg="${p}-1" aria-label="${esc(decLabel)}" ${val <= min ? 'disabled' : ''}>${icon('minus')}</button>
+    <output aria-live="polite">${val}</output>
+    <button type="button" data-act="${act}" data-arg="${p}1" aria-label="${esc(incLabel)}" ${val >= max ? 'disabled' : ''}>${icon('plus')}</button>
+  </div>`;
+}
+function backHTML(view, label) {
+  return `<button type="button" class="back" data-act="view" data-arg="${view}">${icon('back')}<span>${esc(label)}</span></button>`;
+}
+function usdHTML(cents) {
+  if (state.lang !== 'en') return '';
+  return `<p class="usd">≈ <b>${usd(cents)} USD</b> · ${t('usd_note')} (18.00 MXN = 1 USD)</p>`;
+}
+function roundHTML(r, compact) {
+  const lines = compact ? '' : `<ul class="round-lines">${r.lines.map(l => {
+    const o = optName(l);
+    return `<li><span class="q">${l.qty}×</span><span>${esc(lineName(l))}${o || l.note ? `<small>${esc([o, l.note ? '“' + l.note + '”' : ''].filter(Boolean).join(' · '))}</small>` : ''}</span></li>`;
+  }).join('')}</ul>`;
+  return `<article class="round${compact ? '' : ' card'}" data-round="${r.n}" aria-labelledby="rt-${r.n}${compact ? 'c' : ''}">
+    <div class="round-head">
+      <div>
+        <h3 id="rt-${r.n}${compact ? 'c' : ''}">${t('round_n', { n: r.n })}</h3>
+        <span class="round-time">${t('sent_at', { time: fmtTime(r.at) })}</span>
+      </div>
+      <span class="round-state" data-step="${r.step}">${t('st' + r.step)}</span>
+    </div>
+    <div class="sedal" aria-hidden="true"><i style="width:${SEDAL_W[r.step]}"></i></div>
+    <ol class="steps">${[0, 1, 2].map(i => `<li class="step${i <= r.step ? ' on' : ''}${i === r.step ? ' now' : ''}"${i === r.step ? ' aria-current="step"' : ''}>${t('st' + i)}</li>`).join('')}</ol>
+    ${lines}
+  </article>`;
+}
+
+/* ==========================================================================
+   Render: marco, franja, encabezado
+   ========================================================================== */
+function renderPitch() {
+  const p = $('pitch');
+  p.setAttribute('aria-label', t('pitch_label'));
+  p.innerHTML = `
+    <p class="pitch-kicker">${t('pitch_kicker')}</p>
+    <p class="pitch-title">${t('pitch_title')} <span class="nowrap">Hunters<span class="amp">&amp;</span>Fishers</span></p>
+    <ol class="pitch-steps">
+      <li><span class="pitch-n">1</span><span><b>${t('p1_t')}</b> ${t('p1')}</span></li>
+      <li><span class="pitch-n">2</span><span><b>${t('p2_t')}</b> ${t('p2')}</span></li>
+      <li><span class="pitch-n">3</span><span><b>${t('p3_t')}</b> ${t('p3')}</span></li>
+    </ol>
+    <p class="pitch-note">${icon('info')}<span>${t('pitch_note')}</span></p>
+    <p class="pitch-detail">${t('pitch_detail')}</p>`;
+}
+function renderRibbon() {
+  const r = $('ribbon');
+  r.hidden = !state.ribbon;
+  if (!state.ribbon) { r.innerHTML = ''; return; }
+  r.innerHTML = `<p>${t('ribbon')}</p><button type="button" class="icon-btn" data-act="ribbon-close" aria-label="${t('ribbon_close')}">${icon('x')}</button>`;
+}
+function renderHeader() {
+  const w = state.waiter;
+  const callLabel = t('call_waiter') + (w ? ' · ' + waiterText() : '');
+  $('top').innerHTML = `
+    <div class="top-row">
+      <div class="brand-wrap">
+        <h1 class="brand">Hunters<span class="amp">&amp;</span>Fishers</h1>
+        <span class="table-chip"><i aria-hidden="true"></i>${t('table')}</span>
+      </div>
+      <div class="top-actions">
+        <div class="lang" role="group" aria-label="${t('lang_group')}">
+          <button type="button" lang="es" data-act="lang" data-arg="es" aria-pressed="${state.lang === 'es'}" aria-label="ES, Español">ES</button>
+          <button type="button" lang="en" data-act="lang" data-arg="en" aria-pressed="${state.lang === 'en'}" aria-label="EN, English">EN</button>
+        </div>
+        <button type="button" class="call" id="call-btn" data-act="waiter-open" aria-haspopup="dialog" aria-label="${esc(callLabel)}" title="${esc(t('call_waiter'))}">${icon('bell')}${w ? '<span class="call-dot" aria-hidden="true"></span>' : ''}</button>
+      </div>
+    </div>
+    ${w && !w.collapsed ? `<div class="waiter-strip"><span>${icon('check')}<span class="waiter-text">${waiterText()}</span></span><button type="button" class="link-btn" data-act="waiter-clear">${t('waiter_done')}</button></div>` : ''}`;
+  measureChrome();
+}
+
+/* ==========================================================================
+   Render: vistas
+   ========================================================================== */
+function sectionsFor(side) { return SECTIONS.filter(s => s.side === side || s.side === 'both'); }
+function chipsHTML() {
+  return sectionsFor(state.side).map((s, i) =>
+    `<button type="button" class="chip" data-act="chip" data-arg="${s.id}" aria-current="${i === 0}">${L(s.name)}</button>`).join('');
+}
+function dishHTML(it) {
+  return `<button type="button" class="dish${it.feature ? ' feature' : ''}" data-act="item" data-arg="${it.id}" aria-haspopup="dialog">
+    ${photoHTML(it)}
+    <span class="dish-body">
+      ${it.tag ? `<span class="tag tag-${it.side}">${L(it.tag)}</span>` : ''}
+      <span class="dish-name">${esc(L(it.name))}</span>
+      <span class="dish-desc">${esc(L(it.desc))}</span>
+      <span class="dish-foot">
+        <span class="price">${priceHTML(it, it.price * 100)}</span>
+        ${it.serves ? `<span class="serves">${t('serves2')}</span>` : ''}
+        <span class="plus" aria-hidden="true">${icon('plus')}</span>
+      </span>
+    </span>
+  </button>`;
+}
+function sectionsHTML() {
+  return sectionsFor(state.side).map(s => `
+    <section class="sec sec-${s.side}" id="sec-${s.id}" aria-labelledby="h-${s.id}">
+      <div class="sec-head g">
+        <span class="sec-ico">${icon(s.icon)}</span>
+        <div>
+          <p class="kicker">${t(s.side === 'both' ? 'k_bar' : s.side === 'hunters' ? 'k_land' : 'k_sea')}</p>
+          <h2 id="h-${s.id}">${L(s.name)}</h2>
+        </div>
+      </div>
+      <div class="dish-list g">${s.items.map(dishHTML).join('')}</div>
+    </section>`).join('');
+}
+function menuStatusHTML() {
+  if (!state.rounds.length) return '';
+  const r = state.rounds[state.rounds.length - 1];
+  return `<div class="g"><div class="mstatus">${roundHTML(r, true)}
+    <button type="button" class="btn btn-ghost btn-block" data-act="view" data-arg="status">${t('view_order')}</button></div></div>`;
+}
+function menuHTML() {
+  const side = state.side;
+  return `<div class="view-menu side-${side}" id="view-menu">
+    <div id="menu-status">${menuStatusHTML()}</div>
+    <div class="g hello">
+      <p class="kicker">${t('welcome')}</p>
+      <h2 id="view-title" tabindex="-1">${t(side === 'hunters' ? 'hello_h' : 'hello_f')}</h2>
+      <div class="sign-wrap" id="sign-wrap">
+        <div class="sign" id="sign" data-side="${side}" role="group" aria-label="${t('side_group')}">
+          <span class="knob" aria-hidden="true"></span>
+          <button type="button" data-act="side" data-arg="hunters" aria-pressed="${side === 'hunters'}"><span class="emo" aria-hidden="true">🦌</span>Hunters</button>
+          <button type="button" data-act="side" data-arg="fishers" aria-pressed="${side === 'fishers'}"><span class="emo" aria-hidden="true">🐟</span>Fishers</button>
+        </div>
+        <p class="sign-desc" id="sign-desc">${t(side === 'hunters' ? 'side_h_desc' : 'side_f_desc')}</p>
+      </div>
+    </div>
+    <nav class="chips g" id="chips" aria-label="${t('chips_label')}">${chipsHTML()}</nav>
+    <div class="sections" id="sections">${sectionsHTML()}</div>
+    <p class="g footnote">${t('footnote')}</p>
+    <div class="bar-space"></div>
+  </div>`;
+}
+function unsentHTML() {
+  const n = cartCount();
+  if (!n) return '';
+  return `<div class="warn unsent">${icon('alert')}<div><p>${t('unsent', { items: itemsLabel(n) })}</p>
+    <button type="button" class="btn btn-ghost" data-act="cart-open" aria-haspopup="dialog">${icon('canoe')}${t('bar_view')}</button></div></div>`;
+}
+function statusHTML() {
+  const rs = state.rounds.slice().reverse();
+  return `<div class="g view-pad">
+    ${backHTML('menu', t('back_menu'))}
+    <h2 class="view-title" id="view-title" tabindex="-1">${t('status_title')}</h2>
+    <p class="lead">${t('status_lead')}</p>
+    <div id="unsent">${unsentHTML()}</div>
+    <div class="rounds">${rs.map(r => roundHTML(r, false)).join('')}</div>
+    <p class="demo-note">${icon('info')}${t('demo_sim')}</p>
+    <div class="actions">
+      <button type="button" class="btn btn-primary btn-block" data-act="view" data-arg="bill">${t('ask_bill')}</button>
+      <button type="button" class="btn btn-ghost btn-block" data-act="view" data-arg="menu">${icon('plus')}${t('another_round')}</button>
+    </div>
+    <div class="bar-space"></div>
+  </div>`;
+}
+
+/* ---------- Cuenta ---------- */
+function billLines() {
+  const out = [];
+  state.rounds.forEach(r => r.lines.forEach((l, i) => out.push(Object.assign({}, l, { id: r.n + '-' + i, round: r.n }))));
+  return out;
+}
+function calc() {
+  const lines = billLines();
+  const sub = lines.reduce((a, l) => a + l.unit * l.qty, 0);
+  let tip = 0, tipLabel = '';
+  if (state.tip.mode === 'pct') { tip = Math.round(sub * state.tip.pct / 100); tipLabel = ` (${state.tip.pct}%)`; }
+  else if (state.tip.mode === 'custom') tip = state.tip.err ? 0 : state.tip.cents;
+  else if (state.tip.mode === 'unset') tipLabel = '';
+  const total = sub + tip;
+  /* Partes iguales: centavos exactos; los `rem` centavos sobrantes se reparten de uno en uno */
+  const n = state.split.n;
+  const each = Math.floor(total / n);
+  const rem = total - each * n;
+  /* Por persona */
+  const P = state.split.people;
+  const pSub = new Array(P).fill(0);
+  let unN = 0, unAmt = 0;
+  lines.forEach(l => {
+    const amt = l.unit * l.qty;
+    const who = (state.split.assign[l.id] || []).filter(p => p < P).sort((a, b) => a - b);
+    if (!who.length) { unN++; unAmt += amt; return; }
+    const share = Math.floor(amt / who.length);
+    let r = amt - share * who.length;
+    who.forEach(p => { pSub[p] += share + (r > 0 ? 1 : 0); if (r > 0) r--; });
+  });
+  const assigned = sub - unAmt;
+  const pTip = new Array(P).fill(0);
+  if (assigned > 0 && tip > 0) {
+    const raw = pSub.map(s => tip * s / assigned);
+    const fl = raw.map(Math.floor);
+    let left = tip - fl.reduce((a, b) => a + b, 0);
+    raw.map((v, i) => [v - fl[i], i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (left > 0) { fl[i]++; left--; } });
+    fl.forEach((v, i) => { pTip[i] = v; });
+  }
+  const persons = pSub.map((s, i) => ({ sub: s, tip: pTip[i], total: s + pTip[i] }));
+  const canPay = sub > 0 && !(state.tip.mode === 'custom' && state.tip.err) && !(state.split.mode === 'person' && unN > 0);
+  return { lines, sub, tip, tipLabel, total, n, each, rem, P, persons, unN, unAmt, canPay };
+}
+function tipErrHTML() {
+  const e = state.tip.err;
+  if (!e) return '';
+  return icon('alert') + '<span>' + esc(e === 'high' ? t('tip_err_high', { amt: money(state.tip.cents) }) : t('tip_err')) + '</span>';
+}
+function billHTML() {
+  const b = calc();
+  const tm = state.tip.mode, pct = state.tip.pct;
+  const tipBtn = (arg, label, pressed) => `<button type="button" class="pill" data-act="tip" data-arg="${arg}" aria-pressed="${pressed}">${label}</button>`;
+  return `<div class="g view-pad">
+    ${backHTML('status', t('status_title'))}
+    <h2 class="view-title" id="view-title" tabindex="-1">${t('bill_title')}</h2>
+    <p class="lead">${t('table')} · ${roundsLabel(state.rounds.length)}</p>
+    <div id="unsent">${unsentHTML()}</div>
+    <div class="card">
+      ${state.rounds.map(r => `<div class="bill-round">
+        <p class="mini-label">${t('round_n', { n: r.n })}</p>
+        <ul>${r.lines.map(l => {
+          const o = optName(l);
+          return `<li class="bl"><span class="bl-q">${l.qty}×</span><span class="bl-n">${esc(lineName(l))}${o ? `<small>${esc(o)}</small>` : ''}</span><span class="money">${money(l.unit * l.qty)}</span></li>`;
+        }).join('')}</ul></div>`).join('')}
+      <div class="sum-row sep"><span>${t('subtotal')}</span><span class="money">${money(b.sub)}</span></div>
+      <p class="fine">${t('iva')}</p>
+    </div>
+
+    <section class="block" aria-labelledby="tip-h">
+      <h3 class="block-title" id="tip-h">${t('tip')}</h3>
+      <div class="seg-chips" role="group" aria-labelledby="tip-h">
+        ${tipBtn('none', t('tip_none'), tm === 'none')}
+        ${tipBtn('10', '10%', tm === 'pct' && pct === 10)}
+        ${tipBtn('15', '15%', tm === 'pct' && pct === 15)}
+        ${tipBtn('20', '20%', tm === 'pct' && pct === 20)}
+        ${tipBtn('custom', t('tip_other'), tm === 'custom')}
+      </div>
+      <div class="custom-tip" id="custom-tip" ${tm === 'custom' ? '' : 'hidden'}>
+        <label class="field-label" for="tip-input">${t('tip_amount_label')}</label>
+        <div class="money-input"><span aria-hidden="true">$</span><input id="tip-input" type="text" inputmode="decimal" autocomplete="off" maxlength="10" placeholder="0.00" value="${esc(state.tip.raw)}" aria-describedby="tip-err" aria-invalid="${!!state.tip.err}"></div>
+        <p class="field-err" id="tip-err" aria-live="polite">${tipErrHTML()}</p>
+      </div>
+      <p class="fine">${t('tip_hint')}</p>
+    </section>
+
+    <div id="bill-dyn">${billDynHTML(b)}</div>
+    <div class="bar-space"></div>
+  </div>`;
+}
+function billDynHTML(b) {
+  const sp = state.split;
+  const modeBtn = (m, label) => `<button type="button" data-act="split-mode" data-arg="${m}" aria-pressed="${sp.mode === m}">${label}</button>`;
+  let body = '';
+  if (sp.mode === 'one') {
+    body = `<p class="fine">${t('one_note')}</p>`;
+  } else if (sp.mode === 'equal') {
+    body = `<div class="split-row"><span class="field-label" id="ppl-eq">${t('people')}</span>${stepperHTML('split-n', sp.n, 2, 12, 'ppl-eq', t('fewer'), t('more'))}</div>
+      <div class="each" aria-live="polite">
+        <p class="mini-label">${t('each_pays')}</p>
+        <p class="each-amt">${b.rem ? `${money(b.each)}–${money(b.each + 1)}` : money(b.each)}</p>
+        <p class="fine">${b.rem ? t('cents_diff', { hi: ppLabel(b.rem, b.each + 1), lo: ppLabel(b.n - b.rem, b.each) }) : t('even_ok')}</p>
+      </div>`;
+  } else {
+    const persons = Array.from({ length: b.P }, (_, i) => i);
+    body = `<div class="split-row"><span class="field-label" id="ppl-pp">${t('people')}</span>${stepperHTML('people', sp.people, 2, 12, 'ppl-pp', t('fewer'), t('more'))}</div>
+      <p class="fine">${t('assign_hint')}</p>
+      <ul class="assign">${b.lines.map(l => {
+        const sel = (sp.assign[l.id] || []).filter(p => p < b.P);
+        const o = optName(l);
+        const nm = lineName(l);
+        return `<li class="as-line${sel.length ? '' : ' unassigned'}">
+          <div class="as-top"><span>${l.qty}× ${esc(nm)}${o ? `<small>${esc(o)}</small>` : ''}</span><span class="money">${money(l.unit * l.qty)}</span></div>
+          <div class="as-chips" role="group" aria-label="${esc(t('who', { name: nm }))}">${persons.map(p =>
+            `<button type="button" class="pchip" data-act="assign" data-arg="${l.id}:${p}" aria-pressed="${sel.includes(p)}" aria-label="P${p + 1}, ${t('person_n', { n: p + 1 })}">P${p + 1}</button>`).join('')}</div>
+        </li>`;
+      }).join('')}</ul>
+      ${b.unN ? `<p class="warn">${icon('alert')}<span>${t(b.unN === 1 ? 'unassigned_one' : 'unassigned_many', { n: b.unN, amt: money(b.unAmt) })}</span></p>` : `<p class="ok-note">${icon('check')}<span>${t('all_assigned')}</span></p>`}
+      <p class="fine">${t('tip_prop')}</p>
+      <ul class="persons">${b.persons.map((p, i) => `<li class="person">
+        <span class="person-name">${t('person_n', { n: i + 1 })}</span>
+        <span class="money person-total">${money(p.total)}</span>
+        <span class="person-break">${t('food')} ${money(p.sub)} + ${t('tip').toLowerCase()} ${money(p.tip)}</span>
+      </li>`).join('')}</ul>`;
+  }
+  return `<div class="card">
+      <div class="sum-row"><span>${t('subtotal')}</span><span class="money">${money(b.sub)}</span></div>
+      <div class="sum-row"><span>${t('tip')}${b.tipLabel}</span><span class="money">${money(b.tip)}</span></div>
+      <div class="sum-row total"><span>${t('total')}</span><span class="money">${money(b.total)}</span></div>
+      ${usdHTML(b.total)}
+    </div>
+    <section class="block" aria-labelledby="split-h">
+      <h3 class="block-title" id="split-h">${t('split')}</h3>
+      <div class="seg" role="group" aria-labelledby="split-h">
+        ${modeBtn('one', t('split_one'))}${modeBtn('equal', t('split_equal'))}${modeBtn('person', t('split_person'))}
+      </div>
+      <div class="split-body">${body}</div>
+    </section>`;
+}
+function splitSummary(b, mode) {
+  if (mode !== 'equal') return '';
+  return b.rem ? t('sum_equal_rem', { n: b.n, hi: ppLabel(b.rem, b.each + 1), lo: ppLabel(b.n - b.rem, b.each) }) : t('sum_equal', { n: b.n, amt: money(b.each) });
+}
+/* Resumen de la división en filas (una por persona en 'Por persona') */
+function splitRowsHTML(b, mode) {
+  if (mode === 'person') return b.persons.map((p, i) => `<div class="sum-row"><span>${t('person_n', { n: i + 1 })}</span><span class="money">${money(p.total)}</span></div>`).join('');
+  if (mode === 'equal') return `<div class="sum-row"><span>${t('split_label')}</span><span style="text-align:right">${esc(splitSummary(b, mode))}</span></div>`;
+  return '';
+}
+
+/* ---------- Pago ---------- */
+function payHTML() {
+  const b = calc();
+  const m = state.pay.method;
+  const methods = [['card', 'card'], ['online', 'phone'], ['cash', 'cash']];
+  const rows = splitRowsHTML(b, state.split.mode);
+  /* El botón de acción vive en la barra fija; aquí solo va la explicación */
+  let panel = `<p>${t('pick_method')}</p>`;
+  if (m === 'card' || m === 'cash') panel = `<p>${t(m === 'card' ? 'card_panel' : 'cash_panel')}</p>`;
+  else if (m === 'online') panel = `<div class="demo-box"><b>${icon('info')}${t('demo_nocharge')}</b><p>${t('online_panel')}</p></div>`;
+  return `<div class="g view-pad">
+    ${backHTML('bill', t('bill_title'))}
+    <h2 class="view-title" id="view-title" tabindex="-1">${t('pay_title')}</h2>
+    <div id="unsent">${unsentHTML()}</div>
+    <div class="card amount">
+      <p class="mini-label">${t('pay_amount')}</p>
+      <p class="amount-big">${money(b.total)}</p>
+      ${usdHTML(b.total)}
+      ${rows ? `<div class="split-rows">${rows}</div>` : ''}
+    </div>
+    <div class="methods" role="group" aria-label="${t('pay_title')}">
+      ${methods.map(([k, ic]) => `<button type="button" class="method" data-act="pay-method" data-arg="${k}" aria-pressed="${m === k}">
+        <span class="method-ico">${icon(ic)}</span>
+        <span class="method-txt"><span class="method-name">${t('pay_' + k)}</span><span class="method-desc">${t('pay_' + k + '_d')}</span></span>
+        <span class="method-radio" aria-hidden="true"></span>
+      </button>`).join('')}
+    </div>
+    <div class="pay-panel" id="pay-panel" aria-live="polite">${panel}</div>
+    <div class="bar-space"></div>
+  </div>`;
+}
+
+/* ---------- Final ---------- */
+function doneHTML() {
+  const p = state.paid;
+  const b = p.b;
+  const rows = splitRowsHTML(b, p.splitMode);
+  const settled = p.method === 'online';
+  return `<div class="g view-pad view-done">
+    <div class="done-badge" aria-hidden="true">${icon('antler')}<span class="amp">&amp;</span>${icon('fish')}</div>
+    <h2 class="view-title" id="view-title" tabindex="-1">${t('done_title')}</h2>
+    <p class="lead">${t(settled ? 'done_sub' : 'done_sub_' + p.method)}</p>
+    <div class="card">
+      <p class="mini-label">${t('summary')}</p>
+      <div class="sum-row"><span>${t('rounds_label')}</span><span>${p.rounds}</span></div>
+      <div class="sum-row"><span>${t('method')}</span><span>${t('m_' + p.method)}</span></div>
+      <div class="sum-row"><span>${t('tip_incl')}</span><span class="money">${money(b.tip)}</span></div>
+      ${rows}
+      <div class="sum-row total"><span>${t(settled ? 'paid' : 'pay_amount')}</span><span class="money">${money(b.total)}</span></div>
+      ${usdHTML(b.total)}
+    </div>
+    <div class="card review">
+      <p>${t('review_q')}</p>
+      <button type="button" class="btn btn-ghost btn-block" aria-disabled="true">${icon('star')}${t('review')}<span class="ex-tag">${t('example')}</span></button>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn btn-primary btn-block" data-act="restart">${icon('restart')}${t('restart')}</button>
+    </div>
+    <div class="bar-space"></div>
+  </div>`;
+}
+
+function renderView() {
+  const v = state.view;
+  scroller.innerHTML =
+    v === 'menu' ? menuHTML() :
+    v === 'status' ? statusHTML() :
+    v === 'bill' ? billHTML() :
+    v === 'pay' ? payHTML() :
+    v === 'done' ? doneHTML() : '';
+  activeChip = null;
+  if (v === 'menu') spy();
+}
+
+/* ---------- Barra inferior ---------- */
+function renderBar() {
+  let html = '';
+  if (state.view === 'menu') {
+    const n = cartCount();
+    html = `<div class="bar-canoe" id="bar-canoe" aria-hidden="true">${CANOE_FILLED}<span class="badge${n ? '' : ' zero'}">${n}</span></div>` +
+      (n
+        ? `<div class="bar-info"><span class="bar-label">${t('bar_label')}<span class="sr-only"> · ${itemsLabel(n)}</span></span><span class="bar-amt">${money(cartSub())}</span></div>
+           <button type="button" class="btn btn-primary" data-act="cart-open" aria-haspopup="dialog">${t('bar_view')}</button>`
+        : `<div class="bar-info"><span class="bar-label">${t('bar_label')}</span><span class="bar-empty">${t('bar_empty_hint')}</span></div>`);
+    bar.setAttribute('aria-label', t('bar_label'));
+  } else if (state.view === 'bill') {
+    const b = calc();
+    html = `<div class="bar-info"><span class="bar-label">${t('total')}</span><span class="bar-amt">${money(b.total)}</span></div>
+      <button type="button" class="btn btn-primary" data-act="go-pay" ${b.canPay ? '' : 'disabled'}>${t('go_pay')}</button>`;
+    bar.setAttribute('aria-label', t('total'));
+  } else if (state.view === 'pay') {
+    const b = calc(), m = state.pay.method, busy = state.pay.processing;
+    let btn = `<button type="button" class="btn btn-primary" disabled>${t('pick_short')}</button>`;
+    if (m === 'online') btn = `<button type="button" class="btn btn-primary" data-act="simulate" ${busy ? 'aria-disabled="true" aria-busy="true"' : ''}>${busy ? `<span class="spin" aria-hidden="true"></span>${t('processing')}` : t('simulate')}</button>`;
+    else if (m) btn = `<button type="button" class="btn btn-primary" data-act="pay-confirm">${t('notify_server')}</button>`;
+    html = `<div class="bar-info"><span class="bar-label">${t('pay_amount')}</span><span class="bar-amt">${money(b.total)}</span></div>${btn}`;
+    bar.setAttribute('aria-label', t('pay_amount'));
+  }
+  const wasHidden = bar.hidden;
+  bar.hidden = !html;
+  bar.innerHTML = html;
+  if (!wasHidden && !bar.hidden) bar.style.animation = 'none';
+  else bar.style.animation = '';
+  /* Aviso de canoa sin enviar en Estado / Cuenta / Pago */
+  const un = $('unsent');
+  if (un && state.view !== 'menu') un.innerHTML = unsentHTML();
+  measureChrome();
+}
+
+/* ---------- Sheets ---------- */
+function optErrHTML() { return icon('alert') + '<span>' + esc(t('opt_error')) + '</span>'; }
+function detailHTML() {
+  const d = state.draft, it = ITEMS[d.itemId];
+  const opt = it.opt ? `<fieldset class="opt${d.err ? ' has-err' : ''}" id="d-opt" aria-describedby="d-opt-err">
+      <legend><span>${t(it.opt.label)}</span><span class="req">${t('required')}</span></legend>
+      ${it.opt.hint ? `<p class="opt-hint">${t(it.opt.hint)}</p>` : ''}
+      <div class="opt-list">${it.opt.choices.map(c => `<label class="radio"><input type="radio" name="opt" value="${c.id}" ${d.opt === c.id ? 'checked' : ''}><span class="radio-dot"></span><span>${L(c)}</span></label>`).join('')}</div>
+      <p class="opt-err" id="d-opt-err" role="alert">${d.err ? optErrHTML() : ''}</p>
+    </fieldset>` : '';
+  return `<button type="button" class="sheet-x" data-act="sheet-close" aria-label="${t('close')}">${icon('x')}</button>
+    <div class="sheet-scroll" id="sheet-scroll">
+      ${photoHTML(it, 'ph-hero')}
+      <div class="g sheet-pad">
+        ${it.tag ? `<span class="tag tag-${it.side}">${L(it.tag)}</span>` : ''}
+        <h2 class="sheet-title" id="sheet-title" tabindex="-1">${esc(L(it.name))}</h2>
+        <p class="detail-desc">${esc(L(it.desc))}</p>
+        <p class="detail-price">${priceHTML(it, it.price * 100)}${it.ref ? '' : `<span class="sample-note" aria-hidden="true">${t('sample_price')}</span>`}${it.serves ? `<span class="serves">${t('serves2')}</span>` : ''}</p>
+        ${opt}
+        <div class="field-row">
+          <span class="field-label" id="qty-l">${t('qty')}</span>
+          <div class="stepper" role="group" aria-labelledby="qty-l">
+            <button type="button" data-act="d-qty" data-arg="-1" aria-label="${t('dec')}" ${d.qty <= 1 ? 'disabled' : ''}>${icon('minus')}</button>
+            <output id="d-qty" aria-live="polite">${d.qty}</output>
+            <button type="button" data-act="d-qty" data-arg="1" aria-label="${t('inc')}" ${d.qty >= MAX_QTY ? 'disabled' : ''}>${icon('plus')}</button>
+          </div>
+        </div>
+        <label class="field-label note-label" for="d-note">${t('note_label')}</label>
+        <textarea id="d-note" rows="2" maxlength="140" placeholder="${t('note_ph')}">${esc(d.note)}</textarea>
+      </div>
+    </div>
+    <div class="sheet-foot g">
+      <button type="button" class="btn btn-primary btn-block" id="d-add" data-act="d-add">${t('add_btn', { price: money(it.price * 100 * d.qty) })}</button>
+    </div>`;
+}
+function cartHTML() {
+  const lines = state.cart;
+  return `<button type="button" class="sheet-x" data-act="sheet-close" aria-label="${t('close')}">${icon('x')}</button>
+    <div class="sheet-head g">
+      <h2 class="sheet-title" id="sheet-title" tabindex="-1">${icon('canoe')}${t('cart_title')}</h2>
+      <p class="sheet-sub">${t('table')} · ${itemsLabel(cartCount())}</p>
+    </div>
+    <div class="sheet-scroll">
+      ${lines.length ? `<ul class="lines">${lines.map((l, i) => {
+        const nm = lineName(l), o = optName(l);
+        return `<li class="line g">
+          <div class="line-top"><p class="line-name">${esc(nm)}</p><span class="money line-total">${money(l.unit * l.qty)}</span></div>
+          <p class="line-meta">${o ? `<b>${esc(o)}</b> · ` : ''}${money(l.unit)} ${t('each')}</p>
+          ${l.note ? `<p class="line-note">“${esc(l.note)}”</p>` : ''}
+          <div class="line-ctrl">
+            ${stepperHTML('line-qty', l.qty, 1, MAX_QTY, 'ln-' + i, t('line_dec', { name: nm }), t('line_inc', { name: nm }), i)}
+            <span class="sr-only" id="ln-${i}">${esc(nm)}</span>
+            <button type="button" class="icon-btn line-del" data-act="line-del" data-arg="${i}" aria-label="${esc(t('remove_line', { name: nm }))}">${icon('trash')}</button>
+          </div>
+        </li>`;
+      }).join('')}</ul>` : `<div class="empty g">${icon('canoe')}<p>${t('cart_empty')}</p></div>`}
+    </div>
+    <div class="sheet-foot g">
+      <div class="sum-row"><span>${t('subtotal')}</span><span class="money">${money(cartSub())}</span></div>
+      <button type="button" class="btn btn-primary btn-block" data-act="send" ${lines.length ? '' : 'disabled'}>${icon('send')}${t('send_kitchen')}</button>
+      <button type="button" class="btn btn-ghost btn-block" data-act="sheet-close">${t('keep_ordering')}</button>
+    </div>`;
+}
+function waiterHTML() {
+  const reasons = [['napkins', 'pepper'], ['round', 'mug'], ['question', 'question']];
+  return `<button type="button" class="sheet-x" data-act="sheet-close" aria-label="${t('close')}">${icon('x')}</button>
+    <div class="sheet-head g">
+      <h2 class="sheet-title" id="sheet-title" tabindex="-1">${t('waiter_title')}</h2>
+      <p class="sheet-sub">${t('table')} · ${t('waiter_sub')}</p>
+    </div>
+    <div class="sheet-scroll">
+      ${state.waiter ? `<div class="g"><div class="waiter-strip in-sheet"><span>${icon('check')}<span class="waiter-text">${waiterText()}</span></span><button type="button" class="link-btn" data-act="waiter-clear">${t('waiter_done')}</button></div></div>` : ''}
+      <div class="reasons g">${reasons.map(([k, ic]) =>
+        `<button type="button" class="reason" data-act="waiter-send" data-arg="${k}"><span class="reason-ico">${icon(ic)}</span><span>${t('w_' + k)}</span></button>`).join('')}</div>
+    </div>`;
+}
+function renderSheet() {
+  const k = state.sheet;
+  if (!k) return;
+  sheetEl.className = 'sheet sheet-' + k + (k === 'cart' ? ' tall' : '');
+  sheetEl.innerHTML = k === 'detail' ? detailHTML() : k === 'cart' ? cartHTML() : waiterHTML();
+}
+let lastFocus = null, sheetTimer = 0;
+function openSheet(kind, opener) {
+  clearTimeout(sheetTimer);
+  state.sheet = kind;
+  lastFocus = opener || document.activeElement;
+  renderSheet();
+  layer.hidden = false;
+  app.inert = true;
+  app.setAttribute('aria-hidden', 'true');
+  void layer.offsetWidth;
+  layer.classList.add('open');
+  const title = $('sheet-title');
+  if (title) title.focus({ preventScroll: true });
+}
+function closeSheet(restore) {
+  if (!state.sheet) return;
+  state.sheet = null;
+  layer.classList.remove('open');
+  app.inert = false;
+  app.removeAttribute('aria-hidden');
+  sheetTimer = setTimeout(() => { layer.hidden = true; sheetEl.innerHTML = ''; }, RM.matches ? 0 : 300);
+  if (restore === false || !lastFocus) return;
+  let f = lastFocus.isConnected ? lastFocus : null;
+  /* Si el botón que abrió el sheet se volvió a pintar, busca su equivalente */
+  if (!f && lastFocus.dataset && lastFocus.dataset.act) f = document.querySelector(`[data-act="${lastFocus.dataset.act}"]`);
+  if (f) f.focus({ preventScroll: true });
+}
+
+function renderAll() {
+  document.documentElement.lang = state.lang === 'es' ? 'es-MX' : 'en';
+  document.title = t('doc_title');
+  renderPitch();
+  renderRibbon();
+  renderHeader();
+  renderView();
+  renderBar();
+  if (state.sheet) renderSheet();
+}
+
+/* ==========================================================================
+   Navegación y chips (scroll spy)
+   ========================================================================== */
+let activeChip = null, spyRaf = 0;
+function setActiveChip(id) {
+  if (activeChip === id) return;
+  activeChip = id;
+  const chips = $('chips');
+  if (!chips) return;
+  let target = null;
+  chips.querySelectorAll('.chip').forEach(b => {
+    const on = b.dataset.arg === id;
+    b.setAttribute('aria-current', on ? 'true' : 'false');
+    if (on) target = b;
+  });
+  if (target) {
+    const cr = chips.getBoundingClientRect(), br = target.getBoundingClientRect();
+    if (br.left < cr.left + 16 || br.right > cr.right - 16) {
+      chips.scrollTo({ left: chips.scrollLeft + (br.left - cr.left) - 16, behavior: behavior() });
+    }
+  }
+}
+function spy() {
+  if (state.view !== 'menu') return;
+  const chips = $('chips');
+  if (!chips) return;
+  const sr = scroller.getBoundingClientRect();
+  const cr = chips.getBoundingClientRect();
+  chips.classList.toggle('stuck', cr.top <= sr.top + 0.5 && scroller.scrollTop > 0);
+  const secs = scroller.querySelectorAll('.sec');
+  if (!secs.length) return;
+  let cur = secs[0].id.slice(4);
+  const lim = cr.bottom + 24;
+  secs.forEach(s => { if (s.getBoundingClientRect().top <= lim) cur = s.id.slice(4); });
+  if (scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 4) cur = secs[secs.length - 1].id.slice(4);
+  setActiveChip(cur);
+}
+scroller.addEventListener('scroll', () => {
+  if (spyRaf) return;
+  spyRaf = requestAnimationFrame(() => { spyRaf = 0; spy(); });
+}, { passive: true });
+
+function scrollToSection(id) {
+  const sec = $('sec-' + id), chips = $('chips');
+  if (!sec || !chips) return;
+  const top = sec.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - chips.offsetHeight + 6;
+  scroller.scrollTo({ top: Math.max(0, top), behavior: behavior() });
+  setActiveChip(id);
+}
+function goView(v) {
+  /* Salir de Pago cancela una simulación en curso */
+  if (state.view === 'pay' && v !== 'pay') { clearTimeout(payTimer); state.pay.processing = false; }
+  state.view = v;
+  renderView();
+  renderBar();
+  scroller.scrollTop = 0;
+  const h = $('view-title');
+  if (h) h.focus({ preventScroll: true });
+}
+
+/* ==========================================================================
+   Acciones
+   ========================================================================== */
+function setLang(lang) {
+  if (typeof live !== 'undefined' && live) live.textContent = '';
+  if (state.lang === lang) return;
+  const top = scroller.scrollTop;
+  state.lang = lang;
+  keepFocus(renderAll);
+  retranslateToasts();
+  scroller.scrollTop = top;
+  spy();
+}
+function setSide(side) {
+  if (state.side === side || state.view !== 'menu') return;
+  state.side = side;
+  const sign = $('sign');
+  sign.dataset.side = side;
+  sign.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.arg === side)));
+  $('view-menu').className = 'view-menu side-' + side;
+  $('sign-desc').textContent = t(side === 'hunters' ? 'side_h_desc' : 'side_f_desc');
+  $('view-title').textContent = t(side === 'hunters' ? 'hello_h' : 'hello_f');
+  const chips = $('chips');
+  chips.innerHTML = chipsHTML();
+  chips.scrollLeft = 0;
+  activeChip = null;
+  const secs = $('sections');
+  secs.innerHTML = sectionsHTML();
+  secs.classList.remove('in-h', 'in-f');
+  void secs.offsetWidth;
+  secs.classList.add(side === 'hunters' ? 'in-h' : 'in-f');
+  /* Si ya bajaste, vuelve al inicio de las secciones (chips arriba) */
+  const wrap = $('sign-wrap');
+  const natural = wrap.getBoundingClientRect().bottom - scroller.getBoundingClientRect().top + scroller.scrollTop + 12;
+  if (scroller.scrollTop > natural) scroller.scrollTop = natural;
+  spy();
+  announce(t(side === 'hunters' ? 'side_h_desc' : 'side_f_desc'));
+}
+function openDetail(id, opener) {
+  state.draft = { itemId: id, qty: 1, opt: null, note: '', err: false };
+  openSheet('detail', opener);
+}
+function updateDraftQty(delta) {
+  const d = state.draft;
+  if (!d) return;
+  d.qty = Math.min(MAX_QTY, Math.max(1, d.qty + delta));
+  $('d-qty').textContent = d.qty;
+  const btns = sheetEl.querySelectorAll('[data-act="d-qty"]');
+  btns[0].disabled = d.qty <= 1;
+  btns[1].disabled = d.qty >= MAX_QTY;
+  if (document.activeElement && document.activeElement.disabled) btns[d.qty <= 1 ? 1 : 0].focus({ preventScroll: true });
+  $('d-add').textContent = t('add_btn', { price: money(ITEMS[d.itemId].price * 100 * d.qty) });
+}
+function addDraft(btn) {
+  /* Guarda contra doble toque: el sheet ya se está cerrando */
+  if (state.sheet !== 'detail' || !state.draft) return;
+  const d = state.draft, it = ITEMS[d.itemId];
+  if (it.opt && !d.opt) {
+    d.err = true;
+    const f = $('d-opt');
+    f.classList.add('has-err');
+    $('d-opt-err').innerHTML = optErrHTML();
+    const sc = $('sheet-scroll');
+    sc.scrollTo({ top: Math.max(0, f.offsetTop - 16), behavior: behavior() });
+    f.querySelector('input').focus({ preventScroll: true });
+    return;
+  }
+  const note = d.note.trim().slice(0, 140);
+  const key = [it.id, d.opt || '', note].join('|');
+  const ex = state.cart.find(l => l.key === key);
+  let capped = false;
+  if (ex) { capped = ex.qty + d.qty > MAX_QTY; ex.qty = Math.min(MAX_QTY, ex.qty + d.qty); }
+  else state.cart.push({ key, itemId: it.id, opt: d.opt, note, qty: d.qty, unit: it.price * 100 });
+  state.draft = null;
+  const from = btn.getBoundingClientRect();
+  const name = L(it.name);
+  closeSheet(true);
+  if (capped) toast('max_qty', { n: MAX_QTY }, 'alert');
+  flyToCanoe(from, () => {
+    keepFocus(renderBar);
+    bob();
+    announce(t('added', { name, count: itemsLabel(cartCount()) }));
+  });
+}
+function flyToCanoe(from, done) {
+  const target = $('bar-canoe');
+  if (RM.matches || !target || typeof Element.prototype.animate !== 'function') { done(); return; }
+  const pr = phone.getBoundingClientRect(), tr = target.getBoundingClientRect();
+  const sx = from.left + from.width / 2 - pr.left, sy = from.top + from.height / 2 - pr.top;
+  const ex = tr.left + tr.width / 2 - pr.left, ey = tr.top + tr.height * 0.45 - pr.top;
+  const dot = document.createElement('span');
+  dot.className = 'dot';
+  dot.style.left = (sx - 8) + 'px';
+  dot.style.top = (sy - 8) + 'px';
+  phone.appendChild(dot);
+  const dx = ex - sx, dy = ey - sy;
+  const anim = dot.animate([
+    { transform: 'translate(0,0) scale(1)', opacity: 1, easing: 'cubic-bezier(.2,.7,.4,1)' },
+    { transform: `translate(${dx * 0.45}px,${Math.min(dy, 0) - 70}px) scale(1.1)`, opacity: 1, offset: 0.42, easing: 'cubic-bezier(.5,0,.75,0)' },
+    { transform: `translate(${dx}px,${dy}px) scale(.5)`, opacity: 0.9 }
+  ], { duration: 560, fill: 'forwards' });
+  let finished = false;
+  const end = () => { if (finished) return; finished = true; dot.remove(); done(); };
+  anim.onfinish = end;
+  setTimeout(end, 800);
+}
+function bob() {
+  const c = $('bar-canoe');
+  if (!c) return;
+  c.classList.remove('bob');
+  void c.offsetWidth;
+  c.classList.add('bob');
+}
+function changeLine(i, delta) {
+  const l = state.cart[i];
+  if (!l) return;
+  l.qty = Math.min(MAX_QTY, Math.max(1, l.qty + delta));
+  keepFocus(() => { renderSheet(); renderBar(); });
+  const el = document.activeElement;
+  if (el && el.disabled) {
+    const other = sheetEl.querySelector(`[data-act="line-qty"][data-arg="${i}:${delta > 0 ? -1 : 1}"]`);
+    if (other) other.focus({ preventScroll: true });
+  }
+}
+function removeLine(i) {
+  const l = state.cart[i];
+  if (!l) return;
+  const nm = lineName(l);
+  state.cart.splice(i, 1);
+  renderSheet();
+  renderBar();
+  const next = sheetEl.querySelector(`[data-act="line-del"][data-arg="${Math.min(i, state.cart.length - 1)}"]`) || $('sheet-title');
+  if (next) next.focus({ preventScroll: true });
+  announce(t('line_removed', { name: nm }));
+}
+function sendOrder() {
+  if (!state.cart.length) return;
+  const n = state.rounds.length + 1;
+  state.rounds.push({ n, lines: state.cart.map(l => Object.assign({}, l)), at: Date.now(), step: 0, done: false });
+  state.cart = [];
+  closeSheet(false);
+  goView('status');
+  toast('toast_sent', { n }, 'send');
+  ensureTick();
+}
+function sendWaiter(reason) {
+  if (state.sheet !== 'waiter') return;
+  state.waiter = { at: Date.now(), reason, shown: 0, collapsed: false };
+  closeSheet(false);
+  renderHeader();
+  const b = document.querySelector('[data-act="waiter-open"]');
+  if (b) b.focus({ preventScroll: true });
+  toast('toast_waiter', null, 'bell');
+  ensureTick();
+}
+function setTip(arg) {
+  if (arg === 'none') state.tip.mode = 'none';
+  else if (arg === 'custom') state.tip.mode = 'custom';
+  else { state.tip.mode = 'pct'; state.tip.pct = Number(arg); }
+  const top = scroller.scrollTop;
+  keepFocus(() => { renderView(); renderBar(); });
+  scroller.scrollTop = top;
+  if (arg === 'custom') { const inp = $('tip-input'); if (inp) inp.focus({ preventScroll: true }); }
+}
+/* Acepta 150, 150.50, 1,500.00 y coma decimal (50,50 = 50.50). Devuelve centavos o null */
+function parseTip(v) {
+  let s = v.trim().replace(/[$\s]/g, '');
+  if (s === '') return 0;
+  if (/^\d+,\d{0,2}$/.test(s)) s = s.replace(',', '.');
+  else if (/^\d{1,3}(,\d{3})+(\.\d{0,2})?$/.test(s)) s = s.replace(/,/g, '');
+  if (!/^\d{1,6}(\.\d{0,2})?$/.test(s)) return null;
+  return Math.round(parseFloat(s) * 100);
+}
+function onTipInput(v) {
+  state.tip.raw = v;
+  const cents = parseTip(v);
+  const sub = calc().sub;
+  state.tip.cents = cents == null ? 0 : cents;
+  state.tip.err = cents == null ? 'fmt' : cents > sub ? 'high' : '';
+  const inp = $('tip-input');
+  inp.setAttribute('aria-invalid', String(!!state.tip.err));
+  $('tip-err').innerHTML = tipErrHTML();
+  refreshBillDyn();
+}
+function refreshBillDyn() {
+  const dyn = $('bill-dyn');
+  if (!dyn) return;
+  keepFocus(() => { dyn.innerHTML = billDynHTML(calc()); renderBar(); });
+}
+function finishPayment(method) {
+  const b = calc();
+  state.paid = { method, b, rounds: state.rounds.length, splitMode: state.split.mode };
+  state.pay.processing = false;
+  /* Fin de la visita: sin toasts pendientes, sin aviso de mesero, rondas cerradas */
+  state.rounds.forEach(r => { r.step = 2; r.done = true; });
+  state.waiter = null;
+  clearInterval(tickId); tickId = 0;
+  clearToasts();
+  renderHeader();
+  goView('done');
+  announce(t(method === 'online' ? 'toast_paid' : 'toast_waiter'));
+}
+function restart() {
+  const lang = state.lang, ribbon = state.ribbon;
+  clearInterval(tickId); tickId = 0;
+  clearTimeout(payTimer);
+  if (state.sheet) closeSheet(false);
+  state = freshState(lang);
+  state.ribbon = ribbon;
+  clearToasts();
+  renderAll();
+  scroller.scrollTop = 0;
+  const h = $('view-title');
+  if (h) h.focus({ preventScroll: true });
+  toast('toast_restart', null, 'restart');
+}
+
+/* ---------- Reloj de la demo (avance del pedido y aviso al mesero) ---------- */
+let tickId = 0, payTimer = 0;
+function ensureTick() { if (!tickId) tickId = setInterval(tick, 500); }
+function tick() {
+  const now = Date.now();
+  state.rounds.forEach(r => {
+    const s = Math.min(2, Math.floor((now - r.at) / STEP_MS));
+    if (s !== r.step) {
+      r.step = s;
+      updateRoundDom(r);
+      announce(t('round_n', { n: r.n }) + ': ' + t('st' + s));
+      if (s === 2 && !r.done) { r.done = true; toast('toast_enjoy'); }
+    }
+  });
+  if (state.waiter) {
+    const w = state.waiter, m = waiterMins();
+    if (m !== w.shown) {
+      w.shown = m;
+      document.querySelectorAll('.waiter-text').forEach(el => { el.textContent = waiterText(); });
+      const cb = $('call-btn');
+      if (cb) cb.setAttribute('aria-label', t('call_waiter') + ' · ' + waiterText());
+    }
+    if (!w.collapsed && now - w.at > WAITER_STRIP_MS) {
+      w.collapsed = true;
+      const hadFocus = $('top').contains(document.activeElement);
+      renderHeader();
+      if (hadFocus) $('call-btn').focus({ preventScroll: true });
+    }
+  }
+  if (!state.waiter && state.rounds.every(r => r.done)) { clearInterval(tickId); tickId = 0; }
+}
+function updateRoundDom(r) {
+  document.querySelectorAll(`[data-round="${r.n}"]`).forEach(el => {
+    const fill = el.querySelector('.sedal i');
+    if (fill) fill.style.width = SEDAL_W[r.step];
+    el.querySelectorAll('.step').forEach((s, i) => {
+      s.classList.toggle('on', i <= r.step); s.classList.toggle('now', i === r.step);
+      if (i === r.step) s.setAttribute('aria-current', 'step'); else s.removeAttribute('aria-current');
+    });
+    const st = el.querySelector('.round-state');
+    if (st) { st.textContent = t('st' + r.step); st.dataset.step = r.step; }
+  });
+}
+
+/* ==========================================================================
+   Eventos (delegación)
+   ========================================================================== */
+let swipedAt = 0;
+const ACTIONS = {
+  'lang': (el) => setLang(el.dataset.arg),
+  'ribbon-close': () => {
+    state.ribbon = false;
+    renderRibbon();
+    measureChrome();
+    const b = document.querySelector('[data-act="lang"][aria-pressed="true"]');
+    if (b) b.focus({ preventScroll: true });
+  },
+  'waiter-open': (el) => openSheet('waiter', el),
+  'waiter-send': (el) => sendWaiter(el.dataset.arg),
+  'waiter-clear': () => {
+    state.waiter = null;
+    renderHeader();
+    if (state.sheet === 'waiter') { renderSheet(); const h = $('sheet-title'); if (h) h.focus({ preventScroll: true }); return; }
+    const b = $('call-btn');
+    if (b) b.focus({ preventScroll: true });
+  },
+  'side': (el) => { if (performance.now() - swipedAt > 400) setSide(el.dataset.arg); },
+  'chip': (el) => scrollToSection(el.dataset.arg),
+  'item': (el) => openDetail(el.dataset.arg, el),
+  'd-qty': (el) => updateDraftQty(Number(el.dataset.arg)),
+  'd-add': (el) => addDraft(el),
+  'sheet-close': () => closeSheet(true),
+  'cart-open': (el) => openSheet('cart', el),
+  'line-qty': (el) => { const [i, d] = el.dataset.arg.split(':').map(Number); changeLine(i, d); },
+  'line-del': (el) => removeLine(Number(el.dataset.arg)),
+  'send': () => sendOrder(),
+  'view': (el) => goView(el.dataset.arg),
+  'tip': (el) => setTip(el.dataset.arg),
+  'split-mode': (el) => { state.split.mode = el.dataset.arg; refreshBillDyn(); },
+  'split-n': (el) => { state.split.n = Math.min(12, Math.max(2, state.split.n + Number(el.dataset.arg))); refreshBillDyn(); },
+  'people': (el) => {
+    const sp = state.split;
+    sp.people = Math.min(12, Math.max(2, sp.people + Number(el.dataset.arg)));
+    /* Al quitar personas, sus asignaciones se borran (no reaparecen al volver a sumar) */
+    Object.keys(sp.assign).forEach(k => { sp.assign[k] = sp.assign[k].filter(p => p < sp.people); });
+    refreshBillDyn();
+  },
+  'assign': (el) => {
+    const [id, p] = el.dataset.arg.split(':');
+    const n = Number(p);
+    const cur = (state.split.assign[id] || []).filter(x => x < state.split.people);
+    state.split.assign[id] = cur.includes(n) ? cur.filter(x => x !== n) : cur.concat(n);
+    refreshBillDyn();
+  },
+  'go-pay': () => { if (calc().canPay) { state.pay = { method: null, processing: false }; goView('pay'); } },
+  'pay-method': (el) => {
+    if (state.pay.processing) return;
+    state.pay.method = el.dataset.arg;
+    const top = scroller.scrollTop;
+    keepFocus(() => { renderView(); renderBar(); });
+    scroller.scrollTop = top;
+    /* Lleva la explicación del método a la vista; el botón está en la barra fija */
+    scroller.scrollTo({ top: scroller.scrollHeight, behavior: behavior() });
+  },
+  'pay-confirm': () => finishPayment(state.pay.method),
+  'simulate': () => {
+    if (state.pay.processing) return;
+    state.pay.processing = true;
+    keepFocus(renderBar);
+    announce(t('processing'));
+    payTimer = setTimeout(() => { if (state.view === 'pay' && state.pay.processing) finishPayment('online'); }, RM.matches ? 300 : 1400);
+  },
+  'restart': () => restart()
+};
+phone.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-act]');
+  if (!el || el.disabled || el.getAttribute('aria-disabled') === 'true') return;
+  const fn = ACTIONS[el.dataset.act];
+  if (fn) fn(el, e);
+});
+phone.addEventListener('change', (e) => {
+  if (e.target.name === 'opt' && state.draft) {
+    state.draft.opt = e.target.value;
+    state.draft.err = false;
+    const f = $('d-opt');
+    if (f) f.classList.remove('has-err');
+    const er = $('d-opt-err');
+    if (er) er.textContent = '';
+  }
+});
+phone.addEventListener('input', (e) => {
+  if (e.target.id === 'd-note' && state.draft) state.draft.note = e.target.value;
+  if (e.target.id === 'tip-input') onTipInput(e.target.value);
+});
+document.addEventListener('submit', (e) => e.preventDefault());
+
+/* Deslizar el letrero Hunters / Fishers */
+let swipeX = null;
+phone.addEventListener('pointerdown', (e) => { swipeX = e.target.closest('#sign') ? e.clientX : null; }, { passive: true });
+phone.addEventListener('pointercancel', () => { swipeX = null; });
+phone.addEventListener('pointerup', (e) => {
+  if (swipeX == null) return;
+  const dx = e.clientX - swipeX;
+  swipeX = null;
+  if (Math.abs(dx) > 36) { setSide(dx > 0 ? 'fishers' : 'hunters'); swipedAt = performance.now(); }
+});
+
+/* Teclado: Escape cierra, Tab queda atrapado en el sheet */
+document.addEventListener('keydown', (e) => {
+  if (!state.sheet) return;
+  if (e.key === 'Escape') { e.preventDefault(); closeSheet(true); return; }
+  if (e.key !== 'Tab') return;
+  const f = Array.from(sheetEl.querySelectorAll('button:not([disabled]),input:not([disabled]),textarea,[tabindex]:not([tabindex="-1"])'))
+    .filter(el => !(el.type === 'radio' && !el.checked && sheetEl.querySelector(`input[name="${el.name}"]:checked`)));
+  if (!f.length) return;
+  const first = f[0], last = f[f.length - 1], a = document.activeElement;
+  if (e.shiftKey && (a === first || !sheetEl.contains(a) || a === $('sheet-title'))) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && (a === last || !sheetEl.contains(a))) { e.preventDefault(); first.focus(); }
+});
+
+/* Arranque */
+renderAll();
+window.addEventListener('resize', measureChrome);
+})();
+</script>
