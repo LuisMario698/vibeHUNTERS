@@ -1,0 +1,504 @@
+<title>Esencia Hunters&amp;Fishers</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: cabaña de noche. Columna de lectura de ~68ch con bandas de ancho completo
+   para paleta, tipografía y demos. Dark-first porque el negocio vive de noche y frente a pantallas. */
+:root{
+  --carbon:#1C1915;   /* fondo: madera quemada / fogata */
+  --tabla:#26221C;    /* superficie elevada */
+  --veta:#3A332A;     /* bordes, divisores */
+  --hueso:#F2E8D5;    /* texto principal: asta / hueso */
+  --tenue:#B5A990;    /* texto secundario */
+  --naranja:#E8692C;  /* acento: naranja de cazador */
+  --pino:#2F4A3A;     /* primario: bosque */
+  --mar:#5FB3CF;      /* secundario: Mar de Cortés (versión para fondo oscuro) */
+  --madera:#8B5E3C;   /* ornamento */
+  --on-accent:#1C1915;
+  --display:"Alfa Slab One","Rockwell","Roboto Slab",Georgia,serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --label:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --carbon:#F2E8D5; --tabla:#E9DCC4; --veta:#D2C2A4; --hueso:#1C1915; --tenue:#6B5F4E;
+    --naranja:#A3410F; --pino:#2F4A3A; --mar:#1F6E8C; --madera:#8B5E3C; --on-accent:#F2E8D5;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --carbon:#F2E8D5; --tabla:#E9DCC4; --veta:#D2C2A4; --hueso:#1C1915; --tenue:#6B5F4E;
+  --naranja:#A3410F; --pino:#2F4A3A; --mar:#1F6E8C; --madera:#8B5E3C; --on-accent:#F2E8D5;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--carbon);color:var(--hueso);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.prose{max-width:68ch}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.1;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.6rem,3.6vw,2.3rem)}
+h3{font-size:1.15rem}
+p{margin:0}
+a{color:var(--mar);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--naranja);outline-offset:3px;border-radius:4px}
+.lbl{font-family:var(--label);font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:.8rem;color:var(--tenue)}
+.pc{font-family:var(--label);font-weight:600;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--naranja);border:1px solid currentColor;border-radius:3px;padding:0 .4em;white-space:nowrap}
+.stack{display:flex;flex-direction:column;gap:1rem}
+
+/* Encabezado */
+header{border-bottom:1px solid var(--veta)}
+header .wrap{padding-block:clamp(2.5rem,7vw,5rem) 2.5rem;display:grid;gap:1.5rem}
+.brand{font-family:var(--display);font-size:clamp(2.6rem,9vw,5.6rem);line-height:.95;letter-spacing:-.01em}
+.brand .amp{color:var(--naranja)}
+.brand small{display:block;font-family:var(--label);font-size:clamp(.95rem,2vw,1.15rem);letter-spacing:.3em;text-transform:uppercase;color:var(--tenue);margin-top:.9rem}
+.thesis{font-size:clamp(1.1rem,2.2vw,1.35rem);max-width:56ch;color:var(--hueso)}
+.facts{display:flex;flex-wrap:wrap;gap:.5rem 1.75rem;font-family:var(--label);font-size:1rem;color:var(--tenue)}
+.facts b{color:var(--hueso);font-weight:600}
+
+/* Secciones */
+section{border-bottom:1px solid var(--veta)}
+section > .wrap{padding-block:clamp(2.5rem,6vw,4rem);display:grid;gap:1.75rem}
+.sec-head{display:grid;gap:.4rem}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem 2.5rem}
+.cols > *{min-width:0}
+ul.clean{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+ul.clean li{padding-left:1.1rem;position:relative}
+ul.clean li::before{content:"";position:absolute;left:0;top:.68em;width:.45rem;height:2px;background:var(--naranja)}
+blockquote{margin:0;padding:.2rem 0 .2rem 1rem;border-left:3px solid var(--madera);color:var(--tenue);font-style:italic}
+
+/* Menú estrella */
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--veta);border:1px solid var(--veta);border-radius:6px;overflow:hidden}
+.dish{background:var(--tabla);padding:1.1rem 1.2rem;display:grid;gap:.35rem;align-content:start}
+.dish .row{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+.dish h3{font-size:1.05rem}
+.price{font-family:var(--label);font-weight:700;font-size:1.05rem;color:var(--naranja);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dish p{font-size:.95rem;color:var(--tenue)}
+.tag{font-family:var(--label);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mar)}
+
+/* Paleta */
+.palette{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem}
+.sw{display:grid;gap:.5rem;align-content:start}
+.chip{aspect-ratio:4/3;max-width:100%;border-radius:6px;border:1px solid var(--veta);display:flex;align-items:flex-end;padding:.6rem;font-family:var(--label);font-weight:700;font-size:1.05rem;letter-spacing:.04em}
+.sw .name{font-weight:600}
+.sw .meta{font-size:.88rem;color:var(--tenue);line-height:1.45}
+.sw code{font-family:var(--label);font-size:.95rem;color:var(--hueso)}
+.contrast{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem}
+th,td{text-align:left;padding:.55rem .75rem;border-bottom:1px solid var(--veta)}
+th{font-family:var(--label);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;color:var(--tenue)}
+td.n{font-variant-numeric:tabular-nums;font-family:var(--label);font-weight:600}
+.ok{color:var(--mar)} .warn{color:var(--naranja)}
+.sample{display:inline-block;padding:.1rem .55rem;border-radius:3px;font-weight:600}
+
+/* Tipografía */
+.type{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem}
+.spec{background:var(--tabla);border:1px solid var(--veta);border-radius:6px;padding:1.25rem;display:grid;gap:.6rem;align-content:start;min-width:0}
+.spec .big{font-size:2.4rem;line-height:1}
+.spec .why{font-size:.93rem;color:var(--tenue)}
+
+/* Demos de movimiento */
+.demos{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.25rem}
+.demo{background:var(--tabla);border:1px solid var(--veta);border-radius:6px;padding:1.25rem;display:grid;gap:.9rem;align-content:start;min-width:0}
+.demo p{font-size:.93rem;color:var(--tenue)}
+.stage{background:var(--carbon);border:1px dashed var(--veta);border-radius:6px;min-height:120px;display:flex;align-items:center;justify-content:center;padding:1rem;position:relative;overflow:hidden}
+button{font:inherit;cursor:pointer}
+.btn{font-family:var(--label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--naranja);color:var(--on-accent);border:0;border-radius:4px;padding:.55rem 1rem;font-size:.95rem}
+/* 1. Letrero tierra/mar */
+.sign{display:inline-grid;grid-template-columns:1fr 1fr;background:var(--veta);border-radius:999px;padding:4px;position:relative;width:240px;max-width:100%}
+.sign button{position:relative;z-index:1;background:none;border:0;color:var(--tenue);font-family:var(--label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.5rem 0;font-size:.95rem;transition:color .25s}
+.sign button[aria-pressed="true"]{color:var(--on-accent)}
+.sign .knob{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:999px;background:var(--naranja);transition:transform .45s cubic-bezier(.34,1.56,.64,1),background .3s}
+.sign[data-side="mar"] .knob{transform:translateX(100%);background:var(--mar)}
+.sign-out{font-size:.9rem;color:var(--tenue);text-align:center;margin-top:.7rem;min-height:1.5em}
+/* 2. Canoa */
+.canoe-row{display:flex;align-items:center;gap:1.25rem}
+.canoe{width:96px;height:44px;position:relative}
+.canoe svg{width:100%;height:100%;display:block}
+.canoe.bob{animation:bob .7s ease-out}
+@keyframes bob{0%{transform:translateY(0) rotate(0)}25%{transform:translateY(5px) rotate(-3deg)}55%{transform:translateY(-2px) rotate(2deg)}100%{transform:translateY(0) rotate(0)}}
+.count{position:absolute;top:-8px;right:-8px;min-width:24px;height:24px;border-radius:12px;background:var(--naranja);color:var(--on-accent);font-family:var(--label);font-weight:700;font-size:.85rem;display:flex;align-items:center;justify-content:center;padding:0 6px;font-variant-numeric:tabular-nums}
+.drop{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--naranja);left:calc(50% - 90px);top:20px;opacity:0}
+.drop.go{animation:drop .55s cubic-bezier(.5,0,.75,0) forwards}
+@keyframes drop{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(110px,40px) scale(.5)}}
+/* 3. Carrete */
+.reel{width:100%;display:grid;gap:.6rem}
+.line{height:8px;background:var(--veta);border-radius:4px;overflow:hidden}
+.line i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pino),var(--naranja));border-radius:4px;transition:width .9s cubic-bezier(.22,1,.36,1)}
+.steps{display:flex;justify-content:space-between;font-family:var(--label);font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--tenue);gap:.5rem}
+.steps span.on{color:var(--hueso)}
+
+/* Tono */
+.voice{display:grid;gap:1rem}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--veta);border:1px solid var(--veta);border-radius:6px;overflow:hidden}
+.pair > div{background:var(--tabla);padding:1rem 1.2rem;display:grid;gap:.3rem;min-width:0}
+.pair .say{font-size:1.08rem}
+.words{display:flex;flex-wrap:wrap;gap:.6rem}
+.word{font-family:var(--display);font-size:1.4rem;padding:.2rem .8rem;border:2px solid var(--naranja);border-radius:4px;color:var(--hueso)}
+
+/* Competencia */
+.comp{overflow-x:auto}
+.comp table{min-width:640px}
+
+/* Direcciones de demo */
+.dirs{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.25rem}
+.dir{border:1px solid var(--veta);border-radius:6px;overflow:hidden;display:grid;grid-template-rows:auto 1fr;min-width:0}
+.dir .band{height:84px;display:flex;align-items:flex-end;padding:.8rem 1rem;font-family:var(--display);font-size:1.25rem}
+.dir .body{padding:1.1rem 1.2rem;display:grid;gap:.6rem;align-content:start;background:var(--tabla)}
+.dir .body p{font-size:.95rem}
+.b1{background:#1C1915;color:#F2E8D5;border-bottom:4px solid #E8692C}
+.b2{background:repeating-linear-gradient(90deg,#2F4A3A 0 22px,#2A4334 22px 44px);color:#F2E8D5;font-family:var(--label)!important;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.b3{background:#E9DCC4;color:#1C1915;border-bottom:4px dashed #1F6E8C}
+
+/* Fuentes */
+ol.src{margin:0;padding-left:1.3rem;display:grid;gap:.4rem;font-size:.93rem;color:var(--tenue)}
+footer .wrap{padding-block:2rem 3rem;font-size:.88rem;color:var(--tenue)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+
+<header>
+  <div class="wrap">
+    <span class="lbl">ViBE · Estudio de esencia · 18 nov 2026</span>
+    <h1 class="brand">Hunters<span class="amp">&amp;</span>Fishers<small>Puerto Peñasco, Sonora</small></h1>
+    <p class="thesis">Un bar con temática de cabaña de caza y pesca en el centro de Peñasco: alitas, mariscos y deportes en pantalla, con osos y astas de venado en las paredes. Su esencia está en el ampersand: <b>tierra y mar</b> en la misma mesa.</p>
+    <div class="facts">
+      <span><b>Juan de la Barrera y Juan Aldama</b></span>
+      <span>Tel. <b>638 688 3524</b></span>
+      <span>Facebook: <b>2,685</b> seguidores · <b>1,459</b> visitas registradas</span>
+      <span>Restaurant Guru: <b>4.5</b> / 5 · 158 reseñas</span>
+    </div>
+  </div>
+</header>
+
+<!-- 1 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="lbl">Resumen en 3 líneas</span><h2>Quiénes son</h2></div>
+    <div class="prose stack">
+      <p>Hunters&amp;Fishers es un restaurante bar del centro de Puerto Peñasco que mezcla dos mundos: <b>la caza</b> (alitas, boneless, hamburguesas, carnes) y <b>la pesca</b> (aguachile, pulpo, camarón, marlin).</p>
+      <p>El lugar se vive como una cabaña rústica de madera con trofeos de caza, muchas pantallas para deportes, cerveza fría y platillos para compartir en grupo, como la Canoa Cazador.</p>
+      <p>Lo que los hace únicos en Peñasco es esa doble identidad: es el único bar deportivo del centro que encontramos con una temática de caza y pesca tan marcada.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="lbl">Historia y filosofía</span><h2>Lo que transmiten</h2></div>
+    <div class="cols">
+      <div class="stack">
+        <p>No encontramos en fuentes públicas el origen del negocio, el año de apertura ni quiénes son los dueños. <span class="pc">por confirmar</span></p>
+        <p>Lo que sí transmiten, según su propia bio de Facebook y la reseña de Casago:</p>
+        <ul class="clean">
+          <li><b>Camaradería de grupo:</b> platillos para compartir, pantallas y deportes. Se va en bola, no solo.</li>
+          <li><b>Lo rústico auténtico:</b> la decoración de cabaña con osos y astas no es un guiño, es el escenario completo.</li>
+          <li><b>Tierra y mar:</b> el ampersand del nombre y los emojis 🦌 y 🐟 de su bio resumen la propuesta.</li>
+          <li><b>Calidez sencilla:</b> Casago lo describe como un espacio relajado y acogedor, y Restaurant Guru lo menciona como lugar familiar.</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <span class="lbl">Su bio de Facebook, tal cual</span>
+        <blockquote>🦌 &amp; 🐟 Visítanos en: 📍Puerto Peñasco, Son. 🍺Bar 📺Pantallas ⚾️Deportes 🍗Alitas 🐟 Mariscos 📞 6386883524</blockquote>
+        <p style="font-size:.95rem;color:var(--tenue)">Es breve y en puro español. El ⚾️ sugiere que el béisbol pesa (Sonora es tierra de la Liga Mexicana del Pacífico). Qué deportes transmiten realmente queda <span class="pc">por confirmar</span>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="lbl">Producto estrella y oferta</span><h2>Lo que venden de verdad</h2></div>
+    <div class="menu">
+      <div class="dish"><span class="tag">Estrella · para compartir</span><div class="row"><h3>Canoa Cazador</h3><span class="price">$570</span></div><p>Alitas, boneless, dedos de queso, papas y jalapeños poppers. Para 2 personas según Uber Eats; Casago la recomienda para grupos viendo deportes.</p></div>
+      <div class="dish"><span class="tag">Versión mar</span><div class="row"><h3>Canoa Fishers</h3><span class="price">$620</span></div><p>Camarón, calamar y trozos de pescado. Es la prueba de que el concepto tierra/mar ya existe en el menú.</p></div>
+      <div class="dish"><span class="tag">Recomendado</span><div class="row"><h3>Pulpo a la parrilla</h3><span class="price">—</span></div><p>Marinado en salsa de la casa, con papas cambray. Precio <span class="pc">por confirmar</span></p></div>
+      <div class="dish"><span class="tag">Recomendado</span><div class="row"><h3>Cazador Burger</h3><span class="price">—</span></div><p>Carne de 150 g, pan hecho en casa, chiles asados, cebolla morada, tocino y queso amarillo, con papas. Precio <span class="pc">por confirmar</span></p></div>
+      <div class="dish"><span class="tag">Alitas</span><div class="row"><h3>Alitas 12 pzs</h3><span class="price">$155–175</span></div><p>El producto más mencionado en reseñas junto con las hamburguesas.</p></div>
+      <div class="dish"><span class="tag">Botanas</span><div class="row"><h3>Queso fundido · Calamares · Papas cargadas</h3><span class="price">$180–215</span></div><p>También aguachile de camarón, tostadas de atún, tacos gobernador, costillas, cortes, sangría, carajillos y cerveza.</p></div>
+    </div>
+    <p class="prose" style="font-size:.95rem;color:var(--tenue)">Precios en MXN tomados de Uber Eats vía buscador; pueden haber cambiado. Ticket promedio: Restaurant Guru muestra datos contradictorios (MX$200–300 y MX$600–700 por persona) <span class="pc">por confirmar</span>. Lo que los distingue: <b>las canoas para compartir</b> y que el mismo lugar sirve alitas de bar deportivo y mariscos sonorenses.</p>
+  </div>
+</section>
+
+<!-- 4 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="lbl">Público</span><h2>Quién se sienta en sus mesas</h2></div>
+    <div class="cols">
+      <div class="stack">
+        <h3>Locales, en grupo</h3>
+        <p>Su comunicación es 100% en español y Casago dice que está rodeado de bares que frecuentan residentes y visitantes. Grupos de amigos y compañeros de trabajo que van a ver el partido; familias de día (Restaurant Guru lo etiqueta como familiar).</p>
+      </div>
+      <div class="stack">
+        <h3>Turistas de Arizona</h3>
+        <p>Peñasco está a unas 4 horas de Phoenix y Tucson. Casago, una agencia de rentas vacacionales para estadounidenses, lo incluye en su guía en inglés. Ahí hay un público que busca bar con deportes americanos y mariscos frescos.</p>
+      </div>
+      <div class="stack">
+        <h3>Idiomas</h3>
+        <p><b>Español primero, inglés completo.</b> El menú digital tiene que ser bilingüe con un cambio de idioma visible. Qué porcentaje de reseñas viene en inglés no se pudo ver <span class="pc">por confirmar</span>. Edades: adultos jóvenes y familias, sin dato duro <span class="pc">por confirmar</span>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="lbl">Identidad visual</span><h2>Paleta: cabaña de noche</h2>
+      <p class="prose" style="color:var(--tenue)">No tuvimos acceso a su logo ni a fotos del local, así que esta paleta sale del concepto que describen las fuentes (cabaña de madera, trofeos de caza, mar) y debe validarse contra su logo real <span class="pc">por confirmar</span>.</p>
+    </div>
+    <div class="palette">
+      <div class="sw"><div class="chip" style="background:#1C1915;color:#F2E8D5">#1C1915</div><span class="name">Carbón de fogata</span><span class="meta"><b>Fondo.</b> Madera quemada de la cabaña de noche. Un oscuro cálido en vez de negro puro, porque el lugar es de madera, no de acero. En pantallas de bar no deslumbra.</span></div>
+      <div class="sw"><div class="chip" style="background:#E8692C;color:#1C1915">#E8692C</div><span class="name">Naranja cazador</span><span class="meta"><b>Acento y botones.</b> El naranja de seguridad que usan los cazadores en chalecos y gorras. También es el color de la salsa búfalo de sus alitas. Se usa poco: precios, botón de pedir y alertas.</span></div>
+      <div class="sw"><div class="chip" style="background:#2F4A3A;color:#F2E8D5">#2F4A3A</div><span class="name">Pino del bosque</span><span class="meta"><b>Primario de marca.</b> Representa al <i>Hunter</i>: el monte y el camuflaje. Sirve de fondo para secciones de tierra (alitas, carnes, burgers) y para el estado de éxito.</span></div>
+      <div class="sw"><div class="chip" style="background:#1F6E8C;color:#F2E8D5">#1F6E8C</div><span class="name">Mar de Cortés</span><span class="meta"><b>Secundario.</b> Representa al <i>Fisher</i>: secciones de mariscos. Sobre fondo oscuro se usa la variante clara <code>#5FB3CF</code> para texto y enlaces.</span></div>
+      <div class="sw"><div class="chip" style="background:#F2E8D5;color:#1C1915">#F2E8D5</div><span class="name">Hueso / asta</span><span class="meta"><b>Texto sobre oscuro</b> y fondo del modo claro. El color de las astas de venado y del papel kraft de un menú impreso.</span></div>
+      <div class="sw"><div class="chip" style="background:#8B5E3C;color:#F2E8D5">#8B5E3C</div><span class="name">Madera de cabaña</span><span class="meta"><b>Ornamento.</b> Divisores, ilustraciones, iconos grandes. No se usa para texto pequeño sobre fondo oscuro (contraste de 3.1:1).</span></div>
+    </div>
+    <div class="contrast">
+      <table>
+        <thead><tr><th>Combinación</th><th>Muestra</th><th>Contraste</th><th>AA texto normal</th></tr></thead>
+        <tbody>
+          <tr><td>Hueso sobre Carbón</td><td><span class="sample" style="background:#1C1915;color:#F2E8D5">Canoa Cazador</span></td><td class="n">14.4 : 1</td><td class="ok">Pasa</td></tr>
+          <tr><td>Naranja sobre Carbón</td><td><span class="sample" style="background:#1C1915;color:#E8692C">$570</span></td><td class="n">5.4 : 1</td><td class="ok">Pasa</td></tr>
+          <tr><td>Carbón sobre Naranja (botón)</td><td><span class="sample" style="background:#E8692C;color:#1C1915">PEDIR</span></td><td class="n">5.4 : 1</td><td class="ok">Pasa</td></tr>
+          <tr><td>Hueso sobre Pino</td><td><span class="sample" style="background:#2F4A3A;color:#F2E8D5">Tierra</span></td><td class="n">8.0 : 1</td><td class="ok">Pasa</td></tr>
+          <tr><td>Hueso sobre Mar de Cortés</td><td><span class="sample" style="background:#1F6E8C;color:#F2E8D5">Mar</span></td><td class="n">4.7 : 1</td><td class="ok">Pasa</td></tr>
+          <tr><td>Mar claro sobre Carbón</td><td><span class="sample" style="background:#1C1915;color:#5FB3CF">Mariscos</span></td><td class="n">7.4 : 1</td><td class="ok">Pasa</td></tr>
+          <tr><td>Naranja sobre Hueso (modo claro)</td><td><span class="sample" style="background:#F2E8D5;color:#E8692C">$570</span></td><td class="n">≈ 2.7 : 1</td><td class="warn">No pasa. Usar <code>#A3410F</code> (5.2 : 1)</td></tr>
+          <tr><td>Madera sobre Carbón</td><td><span class="sample" style="background:#1C1915;color:#8B5E3C">Detalle</span></td><td class="n">3.1 : 1</td><td class="warn">Solo texto grande u ornamento</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec-head" style="margin-top:1rem"><h2>Tipografía</h2></div>
+    <div class="type">
+      <div class="spec"><span class="lbl">Títulos · Alfa Slab One</span><span class="big" style="font-family:var(--display)">Canoa Cazador</span><p class="why">Una slab serif pesada como los letreros tallados en madera de una cabaña o un parque nacional. Tiene peso de bar deportivo sin caer en la letra western de película de vaqueros. Solo para títulos y nombres de platillos.</p></div>
+      <div class="spec"><span class="lbl">Etiquetas y precios · Barlow Condensed</span><span class="big" style="font-family:var(--label);font-weight:700;letter-spacing:.04em">ALITAS 12 PZS · $175</span><p class="why">Condensada como un marcador deportivo. Cabe mucha información en una línea del celular y los números quedan alineados en columnas de precios.</p></div>
+      <div class="spec"><span class="lbl">Texto · Barlow</span><span style="font-size:1.05rem">Carne de 150 g, pan hecho en casa, chiles asados, cebolla morada, tocino y queso amarillo.</span><p class="why">De la misma familia que las etiquetas, así que todo combina. Se lee bien en pantallas pequeñas y con poca luz, que es justo como se usará el menú en la mesa.</p></div>
+    </div>
+
+    <div class="sec-head" style="margin-top:1rem"><h2>Estilo fotográfico</h2></div>
+    <div class="cols">
+      <ul class="clean">
+        <li><b>Luz cálida y baja,</b> como de lámpara de cabaña. Nada de fondo blanco de estudio.</li>
+        <li><b>Madera siempre en cuadro:</b> mesa, barra o pared con trofeos desenfocada al fondo.</li>
+        <li><b>Toma cenital de las canoas</b> con varias manos tomando piezas: comunica grupo.</li>
+      </ul>
+      <ul class="clean">
+        <li><b>Pareja tierra/mar:</b> fotografiar alitas y aguachile en la misma composición, una de cada lado.</li>
+        <li><b>Detalle de frescura:</b> gotas en la cerveza, vapor del pulpo recién salido del grill, brillo del aguachile.</li>
+        <li><b>Pantallas encendidas al fondo,</b> desenfocadas, para vender el ambiente de partido.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="lbl">Movimiento y animación</span><h2>Robusto, con rebote, nunca nervioso</h2>
+      <p class="prose" style="color:var(--tenue)">Es un bar de grupo y de deportes, así que las animaciones deben sentirse físicas y con energía: un pequeño rebote al soltar, como algo pesado que cae sobre una mesa de madera. Pero cortas (menos de medio segundo), porque la gente pide con el celular en una mano y la cerveza en la otra. Pruébalas:</p>
+    </div>
+    <div class="demos">
+      <div class="demo">
+        <span class="lbl">1 · Letrero tierra / mar</span>
+        <div class="stage" style="flex-direction:column">
+          <div class="sign" id="sign" data-side="tierra" role="group" aria-label="Elegir sección del menú">
+            <span class="knob" aria-hidden="true"></span>
+            <button type="button" id="btn-tierra" aria-pressed="true">🦌 Hunters</button>
+            <button type="button" id="btn-mar" aria-pressed="false">🐟 Fishers</button>
+          </div>
+          <p class="sign-out" id="sign-out" aria-live="polite">Alitas, boneless, burgers, costillas</p>
+        </div>
+        <p>El cambio entre menú de tierra y de mar es la firma del producto. El selector se desliza con un rebote y cambia de naranja a azul mar.</p>
+      </div>
+      <div class="demo">
+        <span class="lbl">2 · Agregar a la canoa</span>
+        <div class="stage">
+          <span class="drop" id="drop" aria-hidden="true"></span>
+          <div class="canoe-row">
+            <button type="button" class="btn" id="add">+ Alitas</button>
+            <div class="canoe" id="canoe" aria-label="Tu pedido">
+              <svg viewBox="0 0 96 44" aria-hidden="true"><path d="M4 14 Q48 22 92 14 L82 34 Q48 42 14 34 Z" fill="#8B5E3C"/><path d="M14 34 Q48 42 82 34" stroke="#F2E8D5" stroke-opacity=".35" stroke-width="2" fill="none"/></svg>
+              <span class="count" id="count">0</span>
+            </div>
+          </div>
+        </div>
+        <p>El carrito es una canoa, como su platillo estrella. Al agregar algo, la pieza cae dentro y la canoa se mece como sobre el agua.</p>
+      </div>
+      <div class="demo">
+        <span class="lbl">3 · Pedido en camino</span>
+        <div class="stage">
+          <div class="reel">
+            <div class="line"><i id="line"></i></div>
+            <div class="steps"><span id="s0" class="on">Recibido</span><span id="s1">En la cocina</span><span id="s2">A tu mesa</span></div>
+            <button type="button" class="btn" id="reel" style="justify-self:center">Avanzar</button>
+          </div>
+        </div>
+        <p>El estado del pedido se muestra como un sedal que se va recogiendo. Ataca la queja principal (servicio lento) mostrando que el pedido sí avanza.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="lbl">Tono de voz</span><h2>Como el cuate que te aparta la mesa</h2></div>
+    <div class="words"><span class="word">Campechano</span><span class="word">Aventurero</span><span class="word">De equipo</span></div>
+    <p class="prose">Hablan de tú, cortito y con emoji, igual que en su bio. Juegan con el vocabulario de caza y pesca (cazar, pescar, canoa, presa, carnada) sin exagerar. En inglés, el tono es el de un sports bar amigable, no una traducción literal.</p>
+    <div class="voice">
+      <div class="pair">
+        <div><span class="lbl">Español</span><p class="say">¿Hay partido? Aparta mesa frente a la pantalla y pide la Canoa Cazador para toda la banda.</p></div>
+        <div><span class="lbl">English</span><p class="say">Game day? Grab a table by the big screen and order the Canoa Cazador for the whole crew.</p></div>
+      </div>
+      <div class="pair">
+        <div><span class="lbl">Español</span><p class="say">Tu pedido ya va para tu mesa. Aquí no tienes que salir a cazarlo.</p></div>
+        <div><span class="lbl">English</span><p class="say">Your order is on its way to your table. No hunting required.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="lbl">Competencia local</span><h2>Quién más pelea por el partido y las alitas</h2></div>
+    <div class="comp">
+      <table>
+        <thead><tr><th>Negocio</th><th>Qué ofrece</th><th>Qué hace en digital</th></tr></thead>
+        <tbody>
+          <tr><td><b>Hunters Restaurant &amp; Bar</b><br><span style="color:var(--tenue);font-size:.88rem">Nicolás Bravo, Centro</span></td><td>Alitas, boneless, burgers artesanales, cerveza barata</td><td>Facebook con 8.7K seguidores (más de 3 veces el de Hunters&amp;Fishers). <b>Nombre casi igual en la misma zona:</b> las búsquedas de "Hunters Peñasco" mezclan reseñas de los dos.</td></tr>
+          <tr><td><b>Bryan's Sports Bar</b><br><span style="color:var(--tenue);font-size:.88rem">Blvd. Carrillo Ruiz</span></td><td>Alitas con muchas salsas, deportes</td><td>Promo fija de alitas 2x1 los miércoles, difundida en guías turísticas. Menú digital <span class="pc">por confirmar</span></td></tr>
+          <tr><td><b>Ricky's and Beer</b><br><span style="color:var(--tenue);font-size:.88rem">Blvd. Benito Juárez</span></td><td>Alitas crujientes, cerveza, abre hasta las 3 a.m.</td><td><span class="pc">por confirmar</span></td></tr>
+          <tr><td><b>Latitude 31 · Wingman Ocean Bar</b></td><td>Bares deportivos con vista al mar o al puerto, deportes americanos</td><td>Enfocados al turista estadounidense. <span class="pc">por confirmar</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cols">
+      <div class="stack"><h3>Dónde está el hueco</h3><p>Ninguno de los competidores que encontramos combina caza y pesca, ni tiene un menú propio con pedido desde la mesa. Hoy Hunters&amp;Fishers depende de Facebook (sin sitio web: el botón "Visit Website" de Casago lleva a su Facebook) y de Uber Eats, que se queda con una comisión por pedido.</p></div>
+      <div class="stack"><h3>El riesgo del nombre</h3><p>Con otro "Hunters" a pocas calles, que tiene más seguidores y peores reseñas en TripAdvisor (3.6), es fácil que los clientes los confundan. Una presencia digital propia con el ampersand bien visible les ayuda a diferenciarse.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="lbl">Oportunidades para ViBE</span><h2>Qué venderles y por qué</h2></div>
+    <div class="cols">
+      <div class="stack"><span class="tag">Prioridad 1</span><h3>Menú digital con pedido y pago</h3><p>Código QR en cada mesa con menú bilingüe, pedido directo a cocina y pago desde el celular. Ataca la queja más repetida (esperar 30 a 45 minutos y meseros que no regresan) y sirve también para pedidos para llevar sin la comisión de Uber Eats.</p></div>
+      <div class="stack"><span class="tag">Prioridad 2</span><h3>Pantallas del bar</h3><p>Ya tienen muchas pantallas. En los cortes del partido pueden mostrar promos, la Canoa del día y el código QR para pedir otra ronda. Es una venta natural después del menú.</p></div>
+      <div class="stack"><span class="tag">Prioridad 3</span><h3>Página web sencilla</h3><p>Una página con ubicación, horarios, el partido de hoy y el enlace al menú. Resuelve que no tienen sitio, ayuda a diferenciarse del otro "Hunters" y le da a Casago y Google un enlace real.</p></div>
+    </div>
+    <p class="prose" style="font-size:.95rem;color:var(--tenue)">Punto de venta y app móvil: no los priorizamos hasta saber qué sistema usan hoy en caja <span class="pc">por confirmar</span>.</p>
+  </div>
+</section>
+
+<!-- 10 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="lbl">Ideas para la demo</span><h2>Tres direcciones para elegir</h2></div>
+    <div class="dirs">
+      <div class="dir"><div class="band b1">Cabaña de noche</div><div class="body"><p>Es la dirección de este estudio. Fondo carbón con vetas de madera sutiles, títulos en slab serif color hueso y el naranja cazador solo en precios y en el botón de pedir. Arriba, el letrero Hunters/Fishers divide el menú en tierra y mar; cada platillo aparece como una placa de trofeo con su foto en luz cálida. Es la opción más fiel al local y la que mejor se ve en una mesa con poca luz.</p></div></div>
+      <div class="dir"><div class="band b2">Marcador deportivo</div><div class="body"><p>El menú se diseña como un marcador de estadio: tipografía condensada, franjas de pasto en verde pino y una barra superior con "Hoy: Naranjeros vs. Águilas, 7:00 pm". Aparecen combos por partido ("Canoa para 4 + cubeta") y un contador de alitas pedidas en la noche. Es la más enérgica y la que mejor convierte en noches de juego.</p></div></div>
+      <div class="dir"><div class="band b3">Bitácora de campo</div><div class="body"><p>Versión clara y de día: papel kraft, ilustraciones a línea de venados, peces y anzuelos como una guía de campo, y sellos de "Pesca del día" sobre los mariscos frescos. Bilingüe desde la portada. Es la que más conecta con el turista y con las familias que van a comer, y la más diferente a cualquier bar de la zona.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="lbl">Pendientes</span><h2>Para confirmar y para la cita con el dueño</h2></div>
+    <div class="cols">
+      <div class="stack">
+        <h3>Datos por confirmar</h3>
+        <ul class="clean">
+          <li><b>La segunda sucursal.</b> No encontramos una segunda ubicación de Hunters&amp;Fishers en ninguna fuente.</li>
+          <li>Logo oficial, colores y tipografía reales (la paleta de este estudio es una propuesta).</li>
+          <li>Instagram: no encontramos cuenta.</li>
+          <li>Horario: Casago dice diario de 1 p.m. a medianoche, Uber Eats de 12 a 11:30 p.m. y otra ficha dice que cierran los lunes.</li>
+          <li>Calificación y reseñas de Google Maps (no se pudieron leer de forma automática).</li>
+          <li>Ticket promedio y precios actuales.</li>
+          <li>Historia, año de apertura y origen del nombre.</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <h3>Preguntas para el dueño</h3>
+        <ul class="clean">
+          <li>¿Dónde está la otra sucursal? ¿Comparten menú y concepto?</li>
+          <li>¿Por qué "Hunters&amp;Fishers"? ¿Usted caza o pesca? ¿De dónde vienen los trofeos?</li>
+          <li>¿Qué porcentaje de clientes son turistas estadounidenses? ¿Tienen menú en inglés?</li>
+          <li>¿Cuánto venden por Uber Eats y cuánto les cobra de comisión?</li>
+          <li>¿Qué sistema usan para cobrar y mandar comandas a cocina?</li>
+          <li>¿Qué deportes llenan el lugar: béisbol, fútbol, NFL, peleas?</li>
+          <li>¿Les han confundido con Hunters Restaurant &amp; Bar?</li>
+          <li>¿Nos comparten el logo en vector y fotos del local?</li>
+        </ul>
+      </div>
+    </div>
+    <div class="stack prose">
+      <h3>Limitaciones de este estudio</h3>
+      <p>No hubo visita de incógnito ni fotos. Facebook solo mostró datos públicos de la página sin sesión y Google Maps no permitió leer sus reseñas, así que todo lo visual es una propuesta basada en la descripción del lugar.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="lbl">Fuentes</span></div>
+    <ol class="src">
+      <li><a href="https://www.facebook.com/profile.php?id=100057369653668">Facebook · Hunters&amp;Fishers</a>: bio, seguidores y teléfono.</li>
+      <li><a href="https://casago.com/rocky-point/restaurants/hunters-fishers/">Casago · Hunters &amp; Fishers</a>: dirección, horario, decoración, menú y platillos recomendados.</li>
+      <li><a href="https://www.ubereats.com/mx/store/hunters&amp;fishers-puerto-penasco/TLmMpeWGVf6cUTxHc0c8vw">Uber Eats · Hunters&amp;fishers</a>: precios (leídos vía buscador).</li>
+      <li><a href="https://restaurantguru.com/Huntersandfishers-Puerto-Penasco">Restaurant Guru · Hunters&amp;fishers</a>: calificación, temas de reseñas y quejas (leídos vía buscador).</li>
+      <li><a href="https://www.facebook.com/HuntersRestBar/">Facebook · Hunter Rest</a> y <a href="https://www.tripadvisor.com/Restaurant_Review-g153981-d6753070-Reviews-Hunters_Restaurant_and_Bar-Puerto_Penasco_Northern_Mexico.html">TripAdvisor · Hunters Restaurant and Bar</a>: el otro "Hunters".</li>
+      <li><a href="https://casago.com/rocky-point/restaurants/bryans-sports-bar/">Casago · Bryan's Sports Bar</a> y <a href="https://casago.com/rocky-point/restaurants/rickys-and-beer/">Casago · Ricky's and Beer</a>: competencia.</li>
+    </ol>
+  </div>
+</section>
+
+<footer><div class="wrap">Estudio preparado por ViBE para uso interno. Los datos marcados "por confirmar" no deben presentarse al cliente como hechos.</div></footer>
+
+<script>
+(function(){
+  var sign=document.getElementById('sign'),bt=document.getElementById('btn-tierra'),bm=document.getElementById('btn-mar'),out=document.getElementById('sign-out');
+  function set(side){
+    sign.dataset.side=side;
+    bt.setAttribute('aria-pressed',side==='tierra');
+    bm.setAttribute('aria-pressed',side==='mar');
+    out.textContent=side==='tierra'?'Alitas, boneless, burgers, costillas':'Aguachile, pulpo, camarón, tostadas de atún';
+  }
+  bt.addEventListener('click',function(){set('tierra')});
+  bm.addEventListener('click',function(){set('mar')});
+
+  var add=document.getElementById('add'),canoe=document.getElementById('canoe'),count=document.getElementById('count'),drop=document.getElementById('drop'),n=0;
+  add.addEventListener('click',function(){
+    drop.classList.remove('go');void drop.offsetWidth;drop.classList.add('go');
+    setTimeout(function(){
+      n++;count.textContent=n;
+      canoe.classList.remove('bob');void canoe.offsetWidth;canoe.classList.add('bob');
+    },450);
+  });
+
+  var reel=document.getElementById('reel'),line=document.getElementById('line'),step=0,w=['8%','55%','100%'];
+  line.style.width=w[0];
+  reel.addEventListener('click',function(){
+    step=(step+1)%3;
+    line.style.width=w[step];
+    for(var i=0;i<3;i++){document.getElementById('s'+i).classList.toggle('on',i<=step)}
+    reel.textContent=step===2?'Reiniciar':'Avanzar';
+  });
+})();
+</script>
